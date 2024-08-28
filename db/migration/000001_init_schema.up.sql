@@ -8,15 +8,16 @@ CREATE TABLE "users" (
   "created_at" timestamp NOT NULL DEFAULT (now())
 );
 
-GRANT SELECT ON users TO space_it_api;
+GRANT SELECT, INSERT ON users TO space_it_api;
 
 CREATE TABLE "spaces" (
   "id" uuid PRIMARY KEY,
+  "name" VARCHAR(30) UNIQUE NOT NULL,
   "owner" uuid NOT NULL,
   "created_at" timestamp NOT NULL DEFAULT (now())
 );
 
-GRANT SELECT ON spaces TO space_it_api;
+GRANT SELECT, INSERT ON spaces TO space_it_api;
 
 CREATE TABLE "messages" (
   "id" uuid PRIMARY KEY,
@@ -25,7 +26,7 @@ CREATE TABLE "messages" (
   "created_at" timestamp NOT NULL DEFAULT (now())
 );
 
-GRANT SELECT ON messages TO space_it_api;
+GRANT SELECT, INSERT ON messages TO space_it_api;
 
 CREATE TABLE "request_log" (
   "id" uuid PRIMARY KEY,
@@ -44,6 +45,8 @@ CREATE TABLE "response_log" (
 CREATE INDEX ON "users" ("email");
 
 CREATE INDEX ON "spaces" ("owner");
+
+CREATE INDEX ON "spaces" ("name");
 
 CREATE INDEX ON "messages" ("space_id");
 
