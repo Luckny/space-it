@@ -23,7 +23,6 @@ func main() {
 	store := db.NewStore(connPool)
 	server := api.NewServer(store)
 
-	util.InfoLog.Println("server listening on", config.ServerAddr)
 	err = server.Run(config.ServerAddr)
 	if err != nil {
 		util.ErrorLog.Fatal("cannot start the server", err)
