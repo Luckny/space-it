@@ -17,7 +17,7 @@ CREATE TABLE "spaces" (
   "created_at" timestamp NOT NULL DEFAULT (now())
 );
 
-GRANT SELECT, INSERT ON spaces TO space_it_api;
+GRANT SELECT, INSERT, UPDATE, DELETE ON spaces TO space_it_api;
 
 CREATE TABLE "messages" (
   "id" uuid PRIMARY KEY,
