@@ -21,6 +21,9 @@ migrateup:
 migratedown:
 	migrate -path db/migration -database "postgres://"${DB_ADMIN_USER}":"${DB_ADMIN_PASSWORD}"@"${DB_HOST}":"${DB_PORT}"/"${DB_NAME}"?sslmode=disable" -verbose down
 
+sqlc:
+	sqlc generate
+
 
 .PHONY:
 	postgres createdb createapiuser dropapiuser dropdb migrateup migratedown
