@@ -3,7 +3,7 @@ package util
 import (
 	"strings"
 
-	"golang.org/x/exp/rand"
+	"math/rand"
 )
 
 const alphabet = "abcdefghijklmnopqrstuvwxyz"
@@ -34,4 +34,9 @@ func RandomEmail() string {
 // generates a random password
 func RandomPassword() string {
 	return randomString(10) + string(randomInt(0, 10))
+}
+
+// generates a random space name
+func RandomSpaceName() string {
+	return randomString(6)
 }

@@ -11,7 +11,13 @@ import (
 )
 
 type Querier interface {
+	CreateSpace(ctx context.Context, arg CreateSpaceParams) (Space, error)
+	DeleteSpace(ctx context.Context, id uuid.UUID) error
+	GetSpaceByID(ctx context.Context, id uuid.UUID) (Space, error)
+	GetSpaceByName(ctx context.Context, name string) (Space, error)
+	ListSpaces(ctx context.Context, arg ListSpacesParams) ([]Space, error)
 	RegisterUser(ctx context.Context, arg RegisterUserParams) (User, error)
+	UpdateSpace(ctx context.Context, arg UpdateSpaceParams) (Space, error)
 }
 
 var _ Querier = (*Queries)(nil)

@@ -8,7 +8,7 @@ import (
 	"github.com/stretchr/testify/require"
 )
 
-func TestRegisterUser(t *testing.T) {
+func createRandomUser(t *testing.T) User {
 	arg := RegisterUserParams{
 		ID:       util.GenUUID(),
 		Email:    util.RandomEmail(),
@@ -24,4 +24,10 @@ func TestRegisterUser(t *testing.T) {
 
 	require.NotZero(t, user.ID)
 	require.NotZero(t, user.CreatedAt)
+
+	return user
+}
+
+func TestRegisterUser(t *testing.T) {
+	createRandomUser(t)
 }
