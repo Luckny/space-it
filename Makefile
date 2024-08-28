@@ -1,4 +1,4 @@
-include ./.ignore/app.env
+include ./app.env
 
 postgres:
 	docker run --name postgresql16 -p 5432:5432 -e POSTGRES_USER=${DB_ADMIN_USER} -e POSTGRES_PASSWORD=${DB_ADMIN_PASSWORD} -d postgres:16-alpine
