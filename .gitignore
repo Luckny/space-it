@@ -1,3 +1,5 @@
 app.env
 SpaceIt.sql
 coverage.out
+bin/
+tmp/

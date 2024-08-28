@@ -24,6 +24,8 @@ migratedown:
 sqlc:
 	sqlc generate
 
+run:
+	air
 
 .PHONY:
-	postgres createdb createapiuser dropapiuser dropdb migrateup migratedown
+	postgres createdb createapiuser dropapiuser dropdb migrateup migratedown sqlc run
