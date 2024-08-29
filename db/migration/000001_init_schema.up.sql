@@ -3,7 +3,7 @@ GRANT USAGE ON SCHEMA public TO space_it_api;
 
 CREATE TABLE "users" (
   "id" uuid PRIMARY KEY,
-  "email" VARCHAR(30) NOT NULL,
+  "email" VARCHAR(30) UNIQUE NOT NULL,
   "password" varchar(255) NOT NULL,
   "created_at" timestamp NOT NULL DEFAULT (now())
 );
