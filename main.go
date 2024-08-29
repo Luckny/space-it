@@ -7,6 +7,7 @@ import (
 	db "github.com/Luckny/space-it/db/sqlc"
 	"github.com/Luckny/space-it/util"
 	"github.com/jackc/pgx/v5/pgxpool"
+	_ "go.uber.org/mock/gomock"
 )
 
 func main() {

@@ -27,5 +27,9 @@ sqlc:
 run:
 	air
 
+mock:
+	mockgen -package mockdb -destination db/mock/store.go github.com/Luckny/space-it/db/sqlc Store
+
+
 .PHONY:
-	postgres createdb createapiuser dropapiuser dropdb migrateup migratedown sqlc run
+	postgres createdb createapiuser dropapiuser dropdb migrateup migratedown sqlc run mock

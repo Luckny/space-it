@@ -8,6 +8,7 @@ require (
 	github.com/jackc/pgx/v5 v5.6.0
 	github.com/spf13/viper v1.19.0
 	github.com/stretchr/testify v1.9.0
+	go.uber.org/mock v0.4.0
 )
 
 require (
