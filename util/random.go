@@ -1,12 +1,11 @@
 package util
 
 import (
-	"strings"
-
 	"math/rand"
 )
 
 const alphabet = "abcdefghijklmnopqrstuvwxyz"
+const alphanum = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
 
 // generates a random integer between min and max
 func randomInt(min, max int64) int64 {
@@ -15,20 +14,16 @@ func randomInt(min, max int64) int64 {
 
 // generates a random string of length n
 func randomString(n int) string {
-	var sb strings.Builder
-	k := len(alphabet)
-
-	for i := 0; i < n; i++ {
-		c := alphabet[rand.Intn(k)]
-		sb.WriteByte(c)
+	b := make([]byte, n)
+	for i := range b {
+		b[i] = alphanum[rand.Intn(len(alphanum))]
 	}
-
-	return sb.String()
+	return string(b)
 }
 
 // generates a random email
 func RandomEmail() string {
-	return randomString(3) + "@" + randomString(4) + ".com"
+	return randomString(4) + "@email.com"
 }
 
 // generates a random password
