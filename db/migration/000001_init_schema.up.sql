@@ -36,11 +36,15 @@ CREATE TABLE "request_log" (
   "created_at" timestamp NOT NULL DEFAULT (now())
 );
 
+GRANT SELECT, INSERT ON request_log TO space_it_api;
+
 CREATE TABLE "response_log" (
   "id" uuid NOT NULL,
   "status" int NOT NULL DEFAULT 0,
   "created_at" timestamp NOT NULL DEFAULT (now())
 );
+
+GRANT INSERT ON response_log TO space_it_api;
 
 CREATE INDEX ON "users" ("email");
 

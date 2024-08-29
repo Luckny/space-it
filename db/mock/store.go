@@ -41,6 +41,35 @@ func (m *MockStore) EXPECT() *MockStoreMockRecorder {
 	return m.recorder
 }
 
+// CreateRequestLog mocks base method.
+func (m *MockStore) CreateRequestLog(arg0 context.Context, arg1 db.CreateRequestLogParams) (uuid.UUID, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "CreateRequestLog", arg0, arg1)
+	ret0, _ := ret[0].(uuid.UUID)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// CreateRequestLog indicates an expected call of CreateRequestLog.
+func (mr *MockStoreMockRecorder) CreateRequestLog(arg0, arg1 any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateRequestLog", reflect.TypeOf((*MockStore)(nil).CreateRequestLog), arg0, arg1)
+}
+
+// CreateResponseLog mocks base method.
+func (m *MockStore) CreateResponseLog(arg0 context.Context, arg1 db.CreateResponseLogParams) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "CreateResponseLog", arg0, arg1)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// CreateResponseLog indicates an expected call of CreateResponseLog.
+func (mr *MockStoreMockRecorder) CreateResponseLog(arg0, arg1 any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateResponseLog", reflect.TypeOf((*MockStore)(nil).CreateResponseLog), arg0, arg1)
+}
+
 // CreateSpace mocks base method.
 func (m *MockStore) CreateSpace(arg0 context.Context, arg1 db.CreateSpaceParams) (db.Space, error) {
 	m.ctrl.T.Helper()

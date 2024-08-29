@@ -11,6 +11,8 @@ import (
 )
 
 type Querier interface {
+	CreateRequestLog(ctx context.Context, arg CreateRequestLogParams) (uuid.UUID, error)
+	CreateResponseLog(ctx context.Context, arg CreateResponseLogParams) error
 	CreateSpace(ctx context.Context, arg CreateSpaceParams) (Space, error)
 	DeleteSpace(ctx context.Context, id uuid.UUID) error
 	GetSpaceByID(ctx context.Context, id uuid.UUID) (Space, error)
