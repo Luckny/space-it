@@ -8,8 +8,6 @@ import (
 	"golang.org/x/time/rate"
 )
 
-var limiter = rate.NewLimiter(rate.Limit(2), 2)
-
 // EnsureJSONContentType ensures that post requests content type is application/json
 func EnsureJSONContentType() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
@@ -33,8 +31,9 @@ func EnsureJSONContentType() gin.HandlerFunc {
 
 }
 
-func RateGuard() gin.HandlerFunc {
+func RateGuard(limiter *rate.Limiter) gin.HandlerFunc {
 	return func(ctx *gin.Context) {
+
 		if !limiter.Allow() {
 			writeError(ctx, http.StatusTooManyRequests, fmt.Errorf("too many requests"))
 			ctx.Abort()

@@ -5,20 +5,22 @@ import (
 
 	db "github.com/Luckny/space-it/db/sqlc"
 	"github.com/gin-gonic/gin"
+	"golang.org/x/time/rate"
 )
 
 type Server struct {
-	store  db.Store
-	router *gin.Engine
+	store   db.Store
+	router  *gin.Engine
+	limiter *rate.Limiter
 }
 
 func NewServer(store db.Store) *Server {
-	server := &Server{store: store}
+	server := &Server{store: store, limiter: rate.NewLimiter(rate.Limit(2), 2)}
 	ginDefault := gin.Default()
 	router := ginDefault.Group("/api/v1")
 
 	router.Use(EnsureJSONContentType())
-	router.Use(RateGuard())
+	router.Use(RateGuard(server.limiter))
 
 	router.POST("/users", server.registerUser)
 
