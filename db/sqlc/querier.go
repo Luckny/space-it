@@ -15,6 +15,7 @@ type Querier interface {
 	DeleteSpace(ctx context.Context, id uuid.UUID) error
 	GetSpaceByID(ctx context.Context, id uuid.UUID) (Space, error)
 	GetSpaceByName(ctx context.Context, name string) (Space, error)
+	GetUserByEmail(ctx context.Context, email string) (User, error)
 	ListSpaces(ctx context.Context, arg ListSpacesParams) ([]Space, error)
 	RegisterUser(ctx context.Context, arg RegisterUserParams) (User, error)
 	UpdateSpace(ctx context.Context, arg UpdateSpaceParams) (Space, error)
