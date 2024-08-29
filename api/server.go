@@ -21,6 +21,7 @@ func NewServer(store db.Store) *Server {
 
 	router.Use(EnsureJSONContentType())
 	router.Use(RateGuard(server.limiter))
+	router.Use(server.Authenticate())
 
 	router.POST("/users", server.registerUser)
 

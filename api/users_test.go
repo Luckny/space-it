@@ -28,8 +28,12 @@ func (e eqRegisterUserParamsMatcher) Matches(x interface{}) bool {
 	if !ok {
 		return false
 	}
-	return reflect.DeepEqual(e.arg.Email, arg.Email) &&
-		reflect.DeepEqual(e.arg.Password, arg.Password)
+
+	if err := util.CheckPassword(e.arg.Password, arg.Password); err != nil {
+		return false
+	}
+
+	return reflect.DeepEqual(e.arg.Email, arg.Email)
 }
 
 func (e eqRegisterUserParamsMatcher) String() string {
@@ -41,7 +45,7 @@ func EqRegisterUserParams(arg db.RegisterUserParams) gomock.Matcher {
 }
 
 func TestRegisterUserAPI(t *testing.T) {
-	user := randomUser()
+	user, unHashedPassword := randomUser(t)
 
 	testCases := []struct {
 		name          string
@@ -53,14 +57,14 @@ func TestRegisterUserAPI(t *testing.T) {
 			name: "should register user",
 			body: registerUserRequest{
 				Email:    user.Email,
-				Password: user.Password,
+				Password: unHashedPassword,
 			},
 
 			buildStubs: func(store *mockdb.MockStore) {
 				arg := db.RegisterUserParams{
 					ID:       user.ID,
 					Email:    user.Email,
-					Password: user.Password,
+					Password: unHashedPassword,
 				}
 
 				store.EXPECT().
@@ -70,6 +74,7 @@ func TestRegisterUserAPI(t *testing.T) {
 
 			},
 
+			// rate limiter is causing trouble
 			checkResponse: func(recorder *httptest.ResponseRecorder) {
 				require.Equal(t, http.StatusCreated, recorder.Code)
 				requireBodyMatchUser(t, recorder.Body, user)
@@ -144,6 +149,7 @@ func TestRegisterUserAPI(t *testing.T) {
 	}
 
 	for _, tc := range testCases {
+
 		t.Run(tc.name, func(t *testing.T) {
 			ctrl := gomock.NewController(t)
 			defer ctrl.Finish()
@@ -170,13 +176,19 @@ func TestRegisterUserAPI(t *testing.T) {
 }
 
 // randomUser generates a random db.User object
-func randomUser() db.User {
-	return db.User{
+func randomUser(t *testing.T) (db.User, string) {
+	pass := util.RandomPassword()
+	hash, err := util.HashPassword(pass)
+	require.NoError(t, err)
+
+	user := db.User{
 		ID:        util.GenUUID(),
 		Email:     util.RandomEmail(),
-		Password:  util.RandomPassword(),
+		Password:  hash,
 		CreatedAt: pgtype.Timestamp{Time: time.Now()},
 	}
+
+	return user, pass
 }
 
 // requireBodyMatchUser checks that the user in the body matches the recieved user
