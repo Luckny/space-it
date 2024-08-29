@@ -16,6 +16,7 @@ func NewServer(store db.Store) *Server {
 	server := &Server{store: store}
 	ginDefault := gin.Default()
 	router := ginDefault.Group("/api/v1")
+
 	router.Use(EnsureJSONContentType())
 
 	router.POST("/users", server.registerUser)
@@ -38,13 +39,13 @@ func writeResponse(c *gin.Context, status int, value interface{}) {
 	c.Header("Cache-Control", "no-store")
 
 	c.JSON(status, value)
+	return
 }
 
 // writeError writes an error response
 func writeError(c *gin.Context, status int, err error) {
 	if status == http.StatusInternalServerError {
 		writeResponse(c, status, map[string]string{"error": "internal server error"})
-		return
 	}
 	writeResponse(c, status, map[string]string{"error": err.Error()})
 }

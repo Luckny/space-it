@@ -16,12 +16,12 @@ func EnsureJSONContentType() gin.HandlerFunc {
 		}
 
 		if ctx.GetHeader("Content-Type") != "application/json" {
-
 			writeError(
 				ctx,
 				http.StatusUnsupportedMediaType,
 				fmt.Errorf("Content-Type must be 'application/json'"),
 			)
+			ctx.Abort()
 			return
 		}
 
