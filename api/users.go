@@ -20,10 +20,17 @@ func (server *Server) registerUser(ctx *gin.Context) {
 		return
 	}
 
+	// hash the password
+	passwordHash, err := util.HashPassword(req.Password)
+	if err != nil {
+		writeError(ctx, http.StatusInternalServerError, err)
+		return
+	}
+
 	arg := db.RegisterUserParams{
 		ID:       util.GenUUID(),
 		Email:    req.Email,
-		Password: req.Password,
+		Password: passwordHash,
 	}
 
 	user, err := server.store.RegisterUser(ctx, arg)
