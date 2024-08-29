@@ -14,9 +14,10 @@ type Server struct {
 
 func NewServer(store db.Store) *Server {
 	server := &Server{store: store}
-	router := gin.Default()
+	ginDefault := gin.Default()
+	router := ginDefault.Group("/api/v1")
 
-	server.router = router
+	server.router = ginDefault
 	return server
 }
 
