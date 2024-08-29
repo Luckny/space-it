@@ -160,6 +160,7 @@ func TestRegisterUserAPI(t *testing.T) {
 
 			url := "/api/v1/users"
 			request, err := http.NewRequest(http.MethodPost, url, bytes.NewReader(data))
+			request.Header.Set("Content-Type", "application/json")
 			require.NoError(t, err)
 
 			server.router.ServeHTTP(recorder, request)

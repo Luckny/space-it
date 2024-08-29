@@ -16,6 +16,7 @@ func NewServer(store db.Store) *Server {
 	server := &Server{store: store}
 	ginDefault := gin.Default()
 	router := ginDefault.Group("/api/v1")
+	router.Use(EnsureJSONContentType())
 
 	router.POST("/users", server.registerUser)
 
