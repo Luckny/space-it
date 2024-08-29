@@ -17,6 +17,8 @@ func NewServer(store db.Store) *Server {
 	ginDefault := gin.Default()
 	router := ginDefault.Group("/api/v1")
 
+	router.POST("/users", server.registerUser)
+
 	server.router = ginDefault
 	return server
 }
