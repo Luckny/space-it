@@ -2,6 +2,7 @@ package util
 
 import (
 	"math/rand"
+	"strconv"
 )
 
 const alphabet = "abcdefghijklmnopqrstuvwxyz"
@@ -28,7 +29,7 @@ func RandomEmail() string {
 
 // generates a random password
 func RandomPassword() string {
-	return randomString(10) + string(randomInt(0, 10))
+	return randomString(10) + strconv.FormatInt(randomInt(0, 10), 10)
 }
 
 // generates a random space name
