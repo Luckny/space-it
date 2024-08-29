@@ -75,3 +75,50 @@ func TestEnsureJSONContentMiddleware(t *testing.T) {
 	}
 
 }
+
+func TestRateLimiter(t *testing.T) {
+	server := NewServer(nil)
+	server.router.Use(RateGuard())
+
+	server.router.GET(
+		"/getpath",
+		func(ctx *gin.Context) {
+			ctx.JSON(http.StatusOK, gin.H{})
+		},
+	)
+
+	errs := make(chan error)
+	responseCode := make(chan int)
+
+	n := int(limiter.Limit()) + 1 // number of allowed request + 1
+
+	// n concurrent calls the an enpoint
+	for i := 0; i < n; i++ {
+		go func() {
+
+			request, err := http.NewRequest(http.MethodGet, "/getpath", nil)
+			require.NoError(t, err)
+
+			recorder := httptest.NewRecorder()
+			server.router.ServeHTTP(recorder, request)
+			errs <- err
+			responseCode <- recorder.Code
+		}()
+	}
+
+	// check results
+	for i := 0; i < n; i++ {
+
+		err := <-errs
+		require.NoError(t, err)
+
+		code := <-responseCode
+
+		if i+1 == n { // last request should fail
+			require.Equal(t, http.StatusTooManyRequests, code)
+		} else {
+			require.Equal(t, http.StatusOK, code)
+		}
+	}
+
+}
