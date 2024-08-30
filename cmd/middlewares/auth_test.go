@@ -138,10 +138,6 @@ func TestAuthenticate(t *testing.T) {
 				"/getpath",
 				func(ctx *gin.Context) {
 					user, _ := ctx.Get("user")
-
-					// u, ok := user.(db.User)
-					// require.True(t, ok)
-
 					ctx.JSON(http.StatusOK, user)
 				},
 			)
