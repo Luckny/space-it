@@ -41,19 +41,19 @@ func (m *MockStore) EXPECT() *MockStoreMockRecorder {
 	return m.recorder
 }
 
-// CreateRequestLog mocks base method.
-func (m *MockStore) CreateRequestLog(arg0 context.Context, arg1 db.CreateRequestLogParams) (uuid.UUID, error) {
+// CreateAuthenticatedRequestLog mocks base method.
+func (m *MockStore) CreateAuthenticatedRequestLog(arg0 context.Context, arg1 db.CreateAuthenticatedRequestLogParams) (uuid.UUID, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "CreateRequestLog", arg0, arg1)
+	ret := m.ctrl.Call(m, "CreateAuthenticatedRequestLog", arg0, arg1)
 	ret0, _ := ret[0].(uuid.UUID)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
-// CreateRequestLog indicates an expected call of CreateRequestLog.
-func (mr *MockStoreMockRecorder) CreateRequestLog(arg0, arg1 any) *gomock.Call {
+// CreateAuthenticatedRequestLog indicates an expected call of CreateAuthenticatedRequestLog.
+func (mr *MockStoreMockRecorder) CreateAuthenticatedRequestLog(arg0, arg1 any) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateRequestLog", reflect.TypeOf((*MockStore)(nil).CreateRequestLog), arg0, arg1)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateAuthenticatedRequestLog", reflect.TypeOf((*MockStore)(nil).CreateAuthenticatedRequestLog), arg0, arg1)
 }
 
 // CreateResponseLog mocks base method.
@@ -83,6 +83,21 @@ func (m *MockStore) CreateSpace(arg0 context.Context, arg1 db.CreateSpaceParams)
 func (mr *MockStoreMockRecorder) CreateSpace(arg0, arg1 any) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateSpace", reflect.TypeOf((*MockStore)(nil).CreateSpace), arg0, arg1)
+}
+
+// CreateUnauthenticatedRequestLog mocks base method.
+func (m *MockStore) CreateUnauthenticatedRequestLog(arg0 context.Context, arg1 db.CreateUnauthenticatedRequestLogParams) (uuid.UUID, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "CreateUnauthenticatedRequestLog", arg0, arg1)
+	ret0, _ := ret[0].(uuid.UUID)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// CreateUnauthenticatedRequestLog indicates an expected call of CreateUnauthenticatedRequestLog.
+func (mr *MockStoreMockRecorder) CreateUnauthenticatedRequestLog(arg0, arg1 any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateUnauthenticatedRequestLog", reflect.TypeOf((*MockStore)(nil).CreateUnauthenticatedRequestLog), arg0, arg1)
 }
 
 // DeleteSpace mocks base method.

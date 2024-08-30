@@ -10,16 +10,15 @@ import (
 	"github.com/stretchr/testify/require"
 )
 
-func createTestRequestLog(t *testing.T, userID uuid.UUID) uuid.UUID {
+func createTestUnAuthenticatedRequestLog(t *testing.T, userID uuid.UUID) uuid.UUID {
 
-	arg := CreateRequestLogParams{
+	arg := CreateUnauthenticatedRequestLogParams{
 		ID:     util.GenUUID(),
 		Method: http.MethodGet,
 		Path:   "/somepath",
-		UserID: userID,
 	}
 
-	reqLogId, err := testStore.CreateRequestLog(context.Background(), arg)
+	reqLogId, err := testStore.CreateUnauthenticatedRequestLog(context.Background(), arg)
 	require.NoError(t, err)
 	require.NotZero(t, reqLogId)
 
@@ -29,12 +28,12 @@ func createTestRequestLog(t *testing.T, userID uuid.UUID) uuid.UUID {
 
 func TestCreateRequestLog(t *testing.T) {
 	user := createRandomUser(t)
-	createTestRequestLog(t, user.ID)
+	createTestUnAuthenticatedRequestLog(t, user.ID)
 }
 
 func TestCreateResponseLog(t *testing.T) {
 	user := createRandomUser(t)
-	reqLogId := createTestRequestLog(t, user.ID)
+	reqLogId := createTestUnAuthenticatedRequestLog(t, user.ID)
 
 	arg := CreateResponseLogParams{
 		ID:     reqLogId,

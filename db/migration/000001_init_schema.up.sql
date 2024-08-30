@@ -32,7 +32,7 @@ CREATE TABLE "request_log" (
   "id" uuid PRIMARY KEY,
   "method" varchar(10) NOT NULL,
   "path" varchar(100) NOT NULL,
-  "user_id" uuid NOT NULL,
+  "user_id" uuid DEFAULT NULL,
   "created_at" timestamp NOT NULL DEFAULT (now())
 );
 

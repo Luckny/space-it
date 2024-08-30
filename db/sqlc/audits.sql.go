@@ -11,21 +11,21 @@ import (
 	"github.com/google/uuid"
 )
 
-const createRequestLog = `-- name: CreateRequestLog :one
+const createAuthenticatedRequestLog = `-- name: CreateAuthenticatedRequestLog :one
 INSERT INTO request_log (id, method, path, user_id)
 VALUES ($1, $2, $3, $4)
 RETURNING id
 `
 
-type CreateRequestLogParams struct {
+type CreateAuthenticatedRequestLogParams struct {
 	ID     uuid.UUID `json:"id"`
 	Method string    `json:"method"`
 	Path   string    `json:"path"`
 	UserID uuid.UUID `json:"user_id"`
 }
 
-func (q *Queries) CreateRequestLog(ctx context.Context, arg CreateRequestLogParams) (uuid.UUID, error) {
-	row := q.db.QueryRow(ctx, createRequestLog,
+func (q *Queries) CreateAuthenticatedRequestLog(ctx context.Context, arg CreateAuthenticatedRequestLogParams) (uuid.UUID, error) {
+	row := q.db.QueryRow(ctx, createAuthenticatedRequestLog,
 		arg.ID,
 		arg.Method,
 		arg.Path,
@@ -49,4 +49,23 @@ type CreateResponseLogParams struct {
 func (q *Queries) CreateResponseLog(ctx context.Context, arg CreateResponseLogParams) error {
 	_, err := q.db.Exec(ctx, createResponseLog, arg.ID, arg.Status)
 	return err
+}
+
+const createUnauthenticatedRequestLog = `-- name: CreateUnauthenticatedRequestLog :one
+INSERT INTO request_log (id, method, path)
+VALUES ($1, $2, $3)
+RETURNING id
+`
+
+type CreateUnauthenticatedRequestLogParams struct {
+	ID     uuid.UUID `json:"id"`
+	Method string    `json:"method"`
+	Path   string    `json:"path"`
+}
+
+func (q *Queries) CreateUnauthenticatedRequestLog(ctx context.Context, arg CreateUnauthenticatedRequestLogParams) (uuid.UUID, error) {
+	row := q.db.QueryRow(ctx, createUnauthenticatedRequestLog, arg.ID, arg.Method, arg.Path)
+	var id uuid.UUID
+	err := row.Scan(&id)
+	return id, err
 }
