@@ -14,7 +14,7 @@ import (
 const createAuthenticatedRequestLog = `-- name: CreateAuthenticatedRequestLog :one
 INSERT INTO request_log (id, method, path, user_id)
 VALUES ($1, $2, $3, $4)
-RETURNING id
+RETURNING id, method, path, user_id, created_at
 `
 
 type CreateAuthenticatedRequestLogParams struct {
@@ -24,21 +24,28 @@ type CreateAuthenticatedRequestLogParams struct {
 	UserID uuid.UUID `json:"user_id"`
 }
 
-func (q *Queries) CreateAuthenticatedRequestLog(ctx context.Context, arg CreateAuthenticatedRequestLogParams) (uuid.UUID, error) {
+func (q *Queries) CreateAuthenticatedRequestLog(ctx context.Context, arg CreateAuthenticatedRequestLogParams) (RequestLog, error) {
 	row := q.db.QueryRow(ctx, createAuthenticatedRequestLog,
 		arg.ID,
 		arg.Method,
 		arg.Path,
 		arg.UserID,
 	)
-	var id uuid.UUID
-	err := row.Scan(&id)
-	return id, err
+	var i RequestLog
+	err := row.Scan(
+		&i.ID,
+		&i.Method,
+		&i.Path,
+		&i.UserID,
+		&i.CreatedAt,
+	)
+	return i, err
 }
 
-const createResponseLog = `-- name: CreateResponseLog :exec
+const createResponseLog = `-- name: CreateResponseLog :one
 INSERT INTO response_log (id, status)
 VALUES ($1, $2)
+RETURNING id, status, created_at
 `
 
 type CreateResponseLogParams struct {
@@ -46,15 +53,17 @@ type CreateResponseLogParams struct {
 	Status int32     `json:"status"`
 }
 
-func (q *Queries) CreateResponseLog(ctx context.Context, arg CreateResponseLogParams) error {
-	_, err := q.db.Exec(ctx, createResponseLog, arg.ID, arg.Status)
-	return err
+func (q *Queries) CreateResponseLog(ctx context.Context, arg CreateResponseLogParams) (ResponseLog, error) {
+	row := q.db.QueryRow(ctx, createResponseLog, arg.ID, arg.Status)
+	var i ResponseLog
+	err := row.Scan(&i.ID, &i.Status, &i.CreatedAt)
+	return i, err
 }
 
 const createUnauthenticatedRequestLog = `-- name: CreateUnauthenticatedRequestLog :one
 INSERT INTO request_log (id, method, path)
 VALUES ($1, $2, $3)
-RETURNING id
+RETURNING id, method, path, user_id, created_at
 `
 
 type CreateUnauthenticatedRequestLogParams struct {
@@ -63,9 +72,15 @@ type CreateUnauthenticatedRequestLogParams struct {
 	Path   string    `json:"path"`
 }
 
-func (q *Queries) CreateUnauthenticatedRequestLog(ctx context.Context, arg CreateUnauthenticatedRequestLogParams) (uuid.UUID, error) {
+func (q *Queries) CreateUnauthenticatedRequestLog(ctx context.Context, arg CreateUnauthenticatedRequestLogParams) (RequestLog, error) {
 	row := q.db.QueryRow(ctx, createUnauthenticatedRequestLog, arg.ID, arg.Method, arg.Path)
-	var id uuid.UUID
-	err := row.Scan(&id)
-	return id, err
+	var i RequestLog
+	err := row.Scan(
+		&i.ID,
+		&i.Method,
+		&i.Path,
+		&i.UserID,
+		&i.CreatedAt,
+	)
+	return i, err
 }

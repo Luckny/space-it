@@ -11,10 +11,10 @@ import (
 )
 
 type Querier interface {
-	CreateAuthenticatedRequestLog(ctx context.Context, arg CreateAuthenticatedRequestLogParams) (uuid.UUID, error)
-	CreateResponseLog(ctx context.Context, arg CreateResponseLogParams) error
+	CreateAuthenticatedRequestLog(ctx context.Context, arg CreateAuthenticatedRequestLogParams) (RequestLog, error)
+	CreateResponseLog(ctx context.Context, arg CreateResponseLogParams) (ResponseLog, error)
 	CreateSpace(ctx context.Context, arg CreateSpaceParams) (Space, error)
-	CreateUnauthenticatedRequestLog(ctx context.Context, arg CreateUnauthenticatedRequestLogParams) (uuid.UUID, error)
+	CreateUnauthenticatedRequestLog(ctx context.Context, arg CreateUnauthenticatedRequestLogParams) (RequestLog, error)
 	DeleteSpace(ctx context.Context, id uuid.UUID) error
 	GetSpaceByID(ctx context.Context, id uuid.UUID) (Space, error)
 	GetSpaceByName(ctx context.Context, name string) (Space, error)

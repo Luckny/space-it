@@ -13,7 +13,6 @@ import (
 	mockdb "github.com/Luckny/space-it/db/mock"
 	db "github.com/Luckny/space-it/db/sqlc"
 	"github.com/Luckny/space-it/util"
-	"github.com/google/uuid"
 	"github.com/stretchr/testify/require"
 	"go.uber.org/mock/gomock"
 )
@@ -74,12 +73,12 @@ func TestRegisterUserAPI(t *testing.T) {
 				store.EXPECT().
 					CreateUnauthenticatedRequestLog(gomock.Any(), gomock.Any()).
 					Times(1).
-					Return(uuid.UUID{}, nil)
+					Return(db.RequestLog{}, nil)
 
 				store.EXPECT().
 					CreateResponseLog(gomock.Any(), gomock.Any()).
 					Times(1).
-					Return(nil)
+					Return(db.ResponseLog{}, nil)
 
 			},
 
@@ -106,13 +105,12 @@ func TestRegisterUserAPI(t *testing.T) {
 				store.EXPECT().
 					CreateUnauthenticatedRequestLog(gomock.Any(), gomock.Any()).
 					Times(1).
-					Return(uuid.UUID{}, nil)
+					Return(db.RequestLog{}, nil)
 
 				store.EXPECT().
 					CreateResponseLog(gomock.Any(), gomock.Any()).
 					Times(1).
-					Return(nil)
-
+					Return(db.ResponseLog{}, nil)
 			},
 
 			checkResponse: func(recorder *httptest.ResponseRecorder) {
@@ -143,12 +141,12 @@ func TestRegisterUserAPI(t *testing.T) {
 				store.EXPECT().
 					CreateUnauthenticatedRequestLog(gomock.Any(), gomock.Any()).
 					Times(1).
-					Return(uuid.UUID{}, nil)
+					Return(db.RequestLog{}, nil)
 
 				store.EXPECT().
 					CreateResponseLog(gomock.Any(), gomock.Any()).
 					Times(1).
-					Return(nil)
+					Return(db.ResponseLog{}, nil)
 
 			},
 
@@ -173,12 +171,12 @@ func TestRegisterUserAPI(t *testing.T) {
 				store.EXPECT().
 					CreateUnauthenticatedRequestLog(gomock.Any(), gomock.Any()).
 					Times(1).
-					Return(uuid.UUID{}, nil)
+					Return(db.RequestLog{}, nil)
 
 				store.EXPECT().
 					CreateResponseLog(gomock.Any(), gomock.Any()).
 					Times(1).
-					Return(nil)
+					Return(db.ResponseLog{}, nil)
 			},
 
 			checkResponse: func(recorder *httptest.ResponseRecorder) {

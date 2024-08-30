@@ -42,10 +42,10 @@ func (m *MockStore) EXPECT() *MockStoreMockRecorder {
 }
 
 // CreateAuthenticatedRequestLog mocks base method.
-func (m *MockStore) CreateAuthenticatedRequestLog(arg0 context.Context, arg1 db.CreateAuthenticatedRequestLogParams) (uuid.UUID, error) {
+func (m *MockStore) CreateAuthenticatedRequestLog(arg0 context.Context, arg1 db.CreateAuthenticatedRequestLogParams) (db.RequestLog, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "CreateAuthenticatedRequestLog", arg0, arg1)
-	ret0, _ := ret[0].(uuid.UUID)
+	ret0, _ := ret[0].(db.RequestLog)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -57,11 +57,12 @@ func (mr *MockStoreMockRecorder) CreateAuthenticatedRequestLog(arg0, arg1 any) *
 }
 
 // CreateResponseLog mocks base method.
-func (m *MockStore) CreateResponseLog(arg0 context.Context, arg1 db.CreateResponseLogParams) error {
+func (m *MockStore) CreateResponseLog(arg0 context.Context, arg1 db.CreateResponseLogParams) (db.ResponseLog, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "CreateResponseLog", arg0, arg1)
-	ret0, _ := ret[0].(error)
-	return ret0
+	ret0, _ := ret[0].(db.ResponseLog)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
 }
 
 // CreateResponseLog indicates an expected call of CreateResponseLog.
@@ -86,10 +87,10 @@ func (mr *MockStoreMockRecorder) CreateSpace(arg0, arg1 any) *gomock.Call {
 }
 
 // CreateUnauthenticatedRequestLog mocks base method.
-func (m *MockStore) CreateUnauthenticatedRequestLog(arg0 context.Context, arg1 db.CreateUnauthenticatedRequestLogParams) (uuid.UUID, error) {
+func (m *MockStore) CreateUnauthenticatedRequestLog(arg0 context.Context, arg1 db.CreateUnauthenticatedRequestLogParams) (db.RequestLog, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "CreateUnauthenticatedRequestLog", arg0, arg1)
-	ret0, _ := ret[0].(uuid.UUID)
+	ret0, _ := ret[0].(db.RequestLog)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }

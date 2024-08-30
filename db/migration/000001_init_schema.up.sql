@@ -44,7 +44,7 @@ CREATE TABLE "response_log" (
   "created_at" timestamp NOT NULL DEFAULT (now())
 );
 
-GRANT INSERT ON response_log TO space_it_api;
+GRANT SELECT, INSERT ON response_log TO space_it_api;
 
 CREATE INDEX ON "users" ("email");
 

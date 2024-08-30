@@ -7,13 +7,12 @@ import (
 	"github.com/Luckny/space-it/pkg/writer"
 	"github.com/Luckny/space-it/util"
 	"github.com/gin-gonic/gin"
-	"github.com/google/uuid"
 )
 
 // AuditLogger is middleware that logs incoming HTTP requests and their corresponding responses.
 func AuditLogger(store db.Store) gin.HandlerFunc {
 	return func(ctx *gin.Context) {
-		reqLogID, err := logRequest(ctx, store)
+		reqLog, err := logRequest(ctx, store)
 		if err != nil {
 			writer.WriteError(ctx, http.StatusInternalServerError, err)
 			ctx.Abort()
@@ -27,8 +26,9 @@ func AuditLogger(store db.Store) gin.HandlerFunc {
 		ctx.Next()
 
 		// log the response
-		arg := db.CreateResponseLogParams{ID: reqLogID, Status: int32(w.Status())}
-		if err := store.CreateResponseLog(ctx, arg); err != nil {
+		arg := db.CreateResponseLogParams{ID: reqLog.ID, Status: int32(w.Status())}
+		_, err = store.CreateResponseLog(ctx, arg)
+		if err != nil {
 			writer.WriteError(ctx, http.StatusInternalServerError, err)
 			ctx.Abort()
 			return
@@ -38,7 +38,7 @@ func AuditLogger(store db.Store) gin.HandlerFunc {
 }
 
 // logRequest logs an incoming HTTP request to the database
-func logRequest(ctx *gin.Context, store db.Store) (uuid.UUID, error) {
+func logRequest(ctx *gin.Context, store db.Store) (db.RequestLog, error) {
 	u, _ := ctx.Get("user")
 	if u != nil {
 		// Handle authenticated request logging
