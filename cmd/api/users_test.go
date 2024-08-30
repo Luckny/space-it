@@ -3,47 +3,21 @@ package api
 import (
 	"bytes"
 	"encoding/json"
-	"fmt"
 	"io"
 	"net/http"
 	"net/http/httptest"
-	"reflect"
 	"testing"
 
 	mockdb "github.com/Luckny/space-it/db/mock"
 	db "github.com/Luckny/space-it/db/sqlc"
-	"github.com/Luckny/space-it/util"
 	"github.com/stretchr/testify/require"
 	"go.uber.org/mock/gomock"
 )
 
-type eqRegisterUserParamsMatcher struct {
-	arg db.RegisterUserParams
-}
-
-func (e eqRegisterUserParamsMatcher) Matches(x interface{}) bool {
-	arg, ok := x.(db.RegisterUserParams)
-	if !ok {
-		return false
-	}
-
-	if err := util.CheckPassword(e.arg.Password, arg.Password); err != nil {
-		return false
-	}
-
-	return reflect.DeepEqual(e.arg.Email, arg.Email)
-}
-
-func (e eqRegisterUserParamsMatcher) String() string {
-	return fmt.Sprintf("matches arg %v", e.arg)
-}
-
-func EqRegisterUserParams(arg db.RegisterUserParams) gomock.Matcher {
-	return eqRegisterUserParamsMatcher{arg}
-}
-
 func TestRegisterUserAPI(t *testing.T) {
 	user, unHashedPassword := mockdb.RandomUser(t)
+
+	// TODO: authenticated tests should call GetUserByEmail and CreateAuthenticatedRequestLog
 
 	testCases := []struct {
 		name          string
@@ -66,7 +40,7 @@ func TestRegisterUserAPI(t *testing.T) {
 				}
 
 				store.EXPECT().
-					RegisterUser(gomock.Any(), EqRegisterUserParams(arg)).
+					RegisterUser(gomock.Any(), mockdb.EqRegisterUserParams(arg)).
 					Times(1).
 					Return(user, nil)
 

@@ -29,7 +29,7 @@ func AuditLogger(store db.Store) gin.HandlerFunc {
 		arg := db.CreateResponseLogParams{ID: reqLog.ID, Status: int32(w.Status())}
 		_, err = store.CreateResponseLog(ctx, arg)
 		if err != nil {
-			writer.WriteError(ctx, http.StatusInternalServerError, err)
+			util.ErrorLog.Println("error creating response log", err)
 			ctx.Abort()
 			return
 		}
