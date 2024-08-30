@@ -3,7 +3,7 @@ package main
 import (
 	"context"
 
-	"github.com/Luckny/space-it/api"
+	"github.com/Luckny/space-it/cmd/api"
 	db "github.com/Luckny/space-it/db/sqlc"
 	"github.com/Luckny/space-it/util"
 	"github.com/jackc/pgx/v5/pgxpool"

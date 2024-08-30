@@ -9,12 +9,10 @@ import (
 	"net/http/httptest"
 	"reflect"
 	"testing"
-	"time"
 
 	mockdb "github.com/Luckny/space-it/db/mock"
 	db "github.com/Luckny/space-it/db/sqlc"
 	"github.com/Luckny/space-it/util"
-	"github.com/jackc/pgx/v5/pgtype"
 	"github.com/stretchr/testify/require"
 	"go.uber.org/mock/gomock"
 )
@@ -45,7 +43,7 @@ func EqRegisterUserParams(arg db.RegisterUserParams) gomock.Matcher {
 }
 
 func TestRegisterUserAPI(t *testing.T) {
-	user, unHashedPassword := randomUser(t)
+	user, unHashedPassword := mockdb.RandomUser(t)
 
 	testCases := []struct {
 		name          string
@@ -169,26 +167,10 @@ func TestRegisterUserAPI(t *testing.T) {
 			request.Header.Set("Content-Type", "application/json")
 			require.NoError(t, err)
 
-			server.router.ServeHTTP(recorder, request)
+			server.Router.ServeHTTP(recorder, request)
 			tc.checkResponse(recorder)
 		})
 	}
-}
-
-// randomUser generates a random db.User object
-func randomUser(t *testing.T) (db.User, string) {
-	pass := util.RandomPassword()
-	hash, err := util.HashPassword(pass)
-	require.NoError(t, err)
-
-	user := db.User{
-		ID:        util.GenUUID(),
-		Email:     util.RandomEmail(),
-		Password:  hash,
-		CreatedAt: pgtype.Timestamp{Time: time.Now()},
-	}
-
-	return user, pass
 }
 
 // requireBodyMatchUser checks that the user in the body matches the recieved user
