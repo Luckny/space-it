@@ -13,6 +13,7 @@ import (
 	mockdb "github.com/Luckny/space-it/db/mock"
 	db "github.com/Luckny/space-it/db/sqlc"
 	"github.com/Luckny/space-it/util"
+	"github.com/google/uuid"
 	"github.com/stretchr/testify/require"
 	"go.uber.org/mock/gomock"
 )
@@ -70,6 +71,16 @@ func TestRegisterUserAPI(t *testing.T) {
 					Times(1).
 					Return(user, nil)
 
+				store.EXPECT().
+					CreateUnauthenticatedRequestLog(gomock.Any(), gomock.Any()).
+					Times(1).
+					Return(uuid.UUID{}, nil)
+
+				store.EXPECT().
+					CreateResponseLog(gomock.Any(), gomock.Any()).
+					Times(1).
+					Return(nil)
+
 			},
 
 			// rate limiter is causing trouble
@@ -91,6 +102,16 @@ func TestRegisterUserAPI(t *testing.T) {
 					RegisterUser(gomock.Any(), gomock.Any()).
 					Times(0).
 					Return(user, nil)
+
+				store.EXPECT().
+					CreateUnauthenticatedRequestLog(gomock.Any(), gomock.Any()).
+					Times(1).
+					Return(uuid.UUID{}, nil)
+
+				store.EXPECT().
+					CreateResponseLog(gomock.Any(), gomock.Any()).
+					Times(1).
+					Return(nil)
 
 			},
 
@@ -119,6 +140,16 @@ func TestRegisterUserAPI(t *testing.T) {
 					Times(0).
 					Return(user, nil)
 
+				store.EXPECT().
+					CreateUnauthenticatedRequestLog(gomock.Any(), gomock.Any()).
+					Times(1).
+					Return(uuid.UUID{}, nil)
+
+				store.EXPECT().
+					CreateResponseLog(gomock.Any(), gomock.Any()).
+					Times(1).
+					Return(nil)
+
 			},
 
 			checkResponse: func(recorder *httptest.ResponseRecorder) {
@@ -138,6 +169,16 @@ func TestRegisterUserAPI(t *testing.T) {
 					RegisterUser(gomock.Any(), gomock.Any()).
 					Times(1).
 					Return(db.User{}, db.ErrUniqueViolation)
+
+				store.EXPECT().
+					CreateUnauthenticatedRequestLog(gomock.Any(), gomock.Any()).
+					Times(1).
+					Return(uuid.UUID{}, nil)
+
+				store.EXPECT().
+					CreateResponseLog(gomock.Any(), gomock.Any()).
+					Times(1).
+					Return(nil)
 			},
 
 			checkResponse: func(recorder *httptest.ResponseRecorder) {
