@@ -1,11 +1,8 @@
 package api
 
 import (
-	"net/http"
-
 	"github.com/Luckny/space-it/cmd/middlewares"
 	db "github.com/Luckny/space-it/db/sqlc"
-	"github.com/Luckny/space-it/pkg/writer"
 	"github.com/gin-gonic/gin"
 	"golang.org/x/time/rate"
 )
@@ -30,9 +27,6 @@ func NewServer(store db.Store) *Server {
 	router.Use(middlewares.AuditLogger(store))
 
 	router.POST("/users", server.registerUser)
-	router.GET("/test", func(ctx *gin.Context) {
-		writer.WriteResponse(ctx, http.StatusOK, nil)
-	})
 
 	server.Router = ginDefault
 	return server
