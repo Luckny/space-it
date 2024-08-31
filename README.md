@@ -1,2 +1,2 @@
 # space-it
-![space-it diagram](./assets/Space_It.png)
+![space-it diagram](./assets/space_it_db_diagram.png)
