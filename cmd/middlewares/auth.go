@@ -6,7 +6,7 @@ import (
 	"strings"
 
 	db "github.com/Luckny/space-it/db/sqlc"
-	"github.com/Luckny/space-it/pkg/writer"
+	"github.com/Luckny/space-it/pkg/httpx"
 	"github.com/Luckny/space-it/util"
 	"github.com/gin-gonic/gin"
 )
@@ -24,7 +24,7 @@ func Authenticate(store db.Store) gin.HandlerFunc {
 
 		email, password, err := util.ExtractAuthHeader(authHeader)
 		if err != nil {
-			writer.WriteError(ctx, http.StatusBadRequest, err)
+			httpx.WriteError(ctx, http.StatusBadRequest, err)
 			ctx.Abort()
 			return
 		}
@@ -32,10 +32,10 @@ func Authenticate(store db.Store) gin.HandlerFunc {
 		user, err := store.GetUserByEmail(ctx, email)
 		if err != nil {
 			if err == db.ErrRecordNotFound {
-				writer.WriteError(ctx, http.StatusNotFound, fmt.Errorf("user not found"))
+				httpx.WriteError(ctx, http.StatusNotFound, fmt.Errorf("user not found"))
 				return
 			}
-			writer.WriteError(ctx, http.StatusInternalServerError, err)
+			httpx.WriteError(ctx, http.StatusInternalServerError, err)
 			ctx.Abort()
 			return
 		}

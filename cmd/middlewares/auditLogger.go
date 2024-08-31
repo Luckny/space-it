@@ -4,7 +4,7 @@ import (
 	"net/http"
 
 	db "github.com/Luckny/space-it/db/sqlc"
-	"github.com/Luckny/space-it/pkg/writer"
+	"github.com/Luckny/space-it/pkg/httpx"
 	"github.com/Luckny/space-it/util"
 	"github.com/gin-gonic/gin"
 )
@@ -14,13 +14,13 @@ func AuditLogger(store db.Store) gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 		reqLog, err := logRequest(ctx, store)
 		if err != nil {
-			writer.WriteError(ctx, http.StatusInternalServerError, err)
+			httpx.WriteError(ctx, http.StatusInternalServerError, err)
 			ctx.Abort()
 			return
 		}
 
 		// Wrap the response writer
-		w := writer.NewResponseWriter(ctx.Writer)
+		w := httpx.NewResponseWriter(ctx.Writer)
 		ctx.Writer = w
 
 		ctx.Next()

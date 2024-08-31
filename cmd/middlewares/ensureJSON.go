@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"net/http"
 
-	"github.com/Luckny/space-it/pkg/writer"
+	"github.com/Luckny/space-it/pkg/httpx"
 	"github.com/gin-gonic/gin"
 )
 
@@ -17,7 +17,7 @@ func EnsureJSONContentType() gin.HandlerFunc {
 		}
 
 		if ctx.GetHeader("Content-Type") != "application/json" {
-			writer.WriteError(
+			httpx.WriteError(
 				ctx,
 				http.StatusUnsupportedMediaType,
 				fmt.Errorf("Content-Type must be 'application/json'"),
