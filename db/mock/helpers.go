@@ -6,6 +6,7 @@ import (
 
 	db "github.com/Luckny/space-it/db/sqlc"
 	"github.com/Luckny/space-it/util"
+	uuid "github.com/google/uuid"
 	"github.com/jackc/pgx/v5/pgtype"
 	"github.com/stretchr/testify/require"
 )
@@ -27,12 +28,11 @@ func RandomUser(t *testing.T) (db.User, string) {
 }
 
 // RandomSpace generates a random db.Space object
-func RandomSpace(t *testing.T) db.Space {
-	user, _ := RandomUser(t)
+func RandomSpace(t *testing.T, userID uuid.UUID) db.Space {
 
 	space := db.Space{
 		Name:      util.RandomSpaceName(),
-		Owner:     user.ID,
+		Owner:     userID,
 		CreatedAt: pgtype.Timestamp{Time: time.Now()},
 	}
 

@@ -18,7 +18,7 @@ import (
 
 func TestCreateSpaceAPI(t *testing.T) {
 	user, _ := mockdb.RandomUser(t)
-	space := mockdb.RandomSpace(t)
+	space := mockdb.RandomSpace(t, user.ID)
 
 	testCases := []struct {
 		name          string
