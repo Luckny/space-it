@@ -10,6 +10,7 @@ import (
 
 	mockdb "github.com/Luckny/space-it/db/mock"
 	db "github.com/Luckny/space-it/db/sqlc"
+	"github.com/gin-gonic/gin"
 	"github.com/stretchr/testify/require"
 	"go.uber.org/mock/gomock"
 )
@@ -114,31 +115,35 @@ func TestRegisterUserAPI(t *testing.T) {
 		},
 	}
 
+	// Run test case
 	for _, tc := range testCases {
-
 		t.Run(tc.name, func(t *testing.T) {
+			// init gomock
 			ctrl := gomock.NewController(t)
-			defer ctrl.Finish()
-
 			store := mockdb.NewMockStore(ctrl)
 			tc.buildStubs(store)
 
-			server := NewServer(store, &ServerOpts{disableMiddlewares: true})
+			// api server with mock store
+			server := NewServer(store)
+			router := gin.Default()
+			router.POST("/users", server.registerUser)
+
+			// request params
+			jsonBody, err := json.Marshal(tc.body)
+			require.NoError(t, err)
+
+			// create request
+			request, err := http.NewRequest(http.MethodPost, "/users", bytes.NewReader(jsonBody))
+			require.NoError(t, err)
+
+			// test recorder
 			recorder := httptest.NewRecorder()
-
-			// Marshall body data to json
-			data, err := json.Marshal(tc.body)
-			require.NoError(t, err)
-
-			url := "/api/v1/users"
-			request, err := http.NewRequest(http.MethodPost, url, bytes.NewReader(data))
-			request.Header.Set("Content-Type", "application/json")
-			require.NoError(t, err)
-
-			server.Router.ServeHTTP(recorder, request)
+			router.ServeHTTP(recorder, request)
+			// check response
 			tc.checkResponse(recorder)
 		})
 	}
+
 }
 
 // requireBodyMatchUser checks that the user in the body matches the recieved user
