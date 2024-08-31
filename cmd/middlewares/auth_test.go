@@ -155,3 +155,58 @@ func TestAuthenticate(t *testing.T) {
 		})
 	}
 }
+
+func TestRequireAuth(t *testing.T) {
+	user, _ := mockdb.RandomUser(t)
+
+	testCases := []struct {
+		name          string
+		authenticate  bool
+		checkResponse func(recorder *httptest.ResponseRecorder)
+	}{
+		{
+			name:         "authenticated request -> ok",
+			authenticate: true,
+			checkResponse: func(recorder *httptest.ResponseRecorder) {
+				require.Equal(t, recorder.Code, http.StatusOK)
+			},
+		},
+
+		{
+			name:         "unauthenticated request -> unauthorized",
+			authenticate: false,
+			checkResponse: func(recorder *httptest.ResponseRecorder) {
+				require.Equal(t, recorder.Code, http.StatusUnauthorized)
+			},
+		},
+	}
+
+	for _, tc := range testCases {
+		t.Run(tc.name, func(t *testing.T) {
+			// api server with mock store
+			router := gin.Default()
+			if tc.authenticate {
+				router.Use(func(c *gin.Context) {
+					c.Set("user", &user)
+					c.Next()
+				})
+			}
+			router.Use(RequireAuthentication())
+
+			router.GET("/test", func(c *gin.Context) {
+				c.JSON(http.StatusOK, nil)
+			})
+
+			// create request
+			request, err := http.NewRequest(http.MethodGet, "/test", nil)
+			require.NoError(t, err)
+
+			// test recorder
+			recorder := httptest.NewRecorder()
+			router.ServeHTTP(recorder, request)
+
+			// check response
+			tc.checkResponse(recorder)
+		})
+	}
+}

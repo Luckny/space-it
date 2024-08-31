@@ -48,3 +48,17 @@ func Authenticate(store db.Store) gin.HandlerFunc {
 		ctx.Next()
 	}
 }
+
+func RequireAuthentication() gin.HandlerFunc {
+	return func(ctx *gin.Context) {
+		_, err := httpx.GetUserFromContext(ctx)
+		if err != nil {
+			ctx.Header("WWW-Authenticate", "Basic realm=\"/\", charset\"UTF-8\"")
+			httpx.WriteError(ctx, http.StatusUnauthorized, fmt.Errorf("who are you?"))
+			ctx.Abort()
+			return
+		}
+
+		ctx.Next()
+	}
+}
