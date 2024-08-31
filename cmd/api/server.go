@@ -13,18 +13,25 @@ type Server struct {
 	Limiter *rate.Limiter
 }
 
-func NewServer(store db.Store) *Server {
+type ServerOpts struct {
+	disableMiddlewares bool
+}
+
+func NewServer(store db.Store, opts *ServerOpts) *Server {
 	server := &Server{
 		store:   store,
 		Limiter: rate.NewLimiter(rate.Limit(2), 2),
 	}
+
 	ginDefault := gin.Default()
 	router := ginDefault.Group("/api/v1")
 
-	router.Use(middlewares.EnsureJSONContentType())
-	router.Use(middlewares.RateGuard(server.Limiter))
-	router.Use(middlewares.Authenticate(store))
-	router.Use(middlewares.AuditLogger(store))
+	if !opts.disableMiddlewares {
+		router.Use(middlewares.EnsureJSONContentType())
+		router.Use(middlewares.RateGuard(server.Limiter))
+		router.Use(middlewares.Authenticate(store))
+		router.Use(middlewares.AuditLogger(store))
+	}
 
 	router.POST("/users", server.registerUser)
 

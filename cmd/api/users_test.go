@@ -17,8 +17,6 @@ import (
 func TestRegisterUserAPI(t *testing.T) {
 	user, unHashedPassword := mockdb.RandomUser(t)
 
-	// TODO: authenticated tests should call GetUserByEmail and CreateAuthenticatedRequestLog
-
 	testCases := []struct {
 		name          string
 		body          registerUserRequest
@@ -43,20 +41,8 @@ func TestRegisterUserAPI(t *testing.T) {
 					RegisterUser(gomock.Any(), mockdb.EqRegisterUserParams(arg)).
 					Times(1).
 					Return(user, nil)
-
-				store.EXPECT().
-					CreateUnauthenticatedRequestLog(gomock.Any(), gomock.Any()).
-					Times(1).
-					Return(db.RequestLog{}, nil)
-
-				store.EXPECT().
-					CreateResponseLog(gomock.Any(), gomock.Any()).
-					Times(1).
-					Return(db.ResponseLog{}, nil)
-
 			},
 
-			// rate limiter is causing trouble
 			checkResponse: func(recorder *httptest.ResponseRecorder) {
 				require.Equal(t, http.StatusCreated, recorder.Code)
 				requireBodyMatchUser(t, recorder.Body, user)
@@ -75,16 +61,6 @@ func TestRegisterUserAPI(t *testing.T) {
 					RegisterUser(gomock.Any(), gomock.Any()).
 					Times(0).
 					Return(user, nil)
-
-				store.EXPECT().
-					CreateUnauthenticatedRequestLog(gomock.Any(), gomock.Any()).
-					Times(1).
-					Return(db.RequestLog{}, nil)
-
-				store.EXPECT().
-					CreateResponseLog(gomock.Any(), gomock.Any()).
-					Times(1).
-					Return(db.ResponseLog{}, nil)
 			},
 
 			checkResponse: func(recorder *httptest.ResponseRecorder) {
@@ -111,17 +87,6 @@ func TestRegisterUserAPI(t *testing.T) {
 					RegisterUser(gomock.Any(), gomock.Any()).
 					Times(0).
 					Return(user, nil)
-
-				store.EXPECT().
-					CreateUnauthenticatedRequestLog(gomock.Any(), gomock.Any()).
-					Times(1).
-					Return(db.RequestLog{}, nil)
-
-				store.EXPECT().
-					CreateResponseLog(gomock.Any(), gomock.Any()).
-					Times(1).
-					Return(db.ResponseLog{}, nil)
-
 			},
 
 			checkResponse: func(recorder *httptest.ResponseRecorder) {
@@ -141,16 +106,6 @@ func TestRegisterUserAPI(t *testing.T) {
 					RegisterUser(gomock.Any(), gomock.Any()).
 					Times(1).
 					Return(db.User{}, db.ErrUniqueViolation)
-
-				store.EXPECT().
-					CreateUnauthenticatedRequestLog(gomock.Any(), gomock.Any()).
-					Times(1).
-					Return(db.RequestLog{}, nil)
-
-				store.EXPECT().
-					CreateResponseLog(gomock.Any(), gomock.Any()).
-					Times(1).
-					Return(db.ResponseLog{}, nil)
 			},
 
 			checkResponse: func(recorder *httptest.ResponseRecorder) {
@@ -168,7 +123,7 @@ func TestRegisterUserAPI(t *testing.T) {
 			store := mockdb.NewMockStore(ctrl)
 			tc.buildStubs(store)
 
-			server := NewServer(store)
+			server := NewServer(store, &ServerOpts{disableMiddlewares: true})
 			recorder := httptest.NewRecorder()
 
 			// Marshall body data to json

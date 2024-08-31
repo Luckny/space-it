@@ -22,7 +22,7 @@ func main() {
 	}
 
 	store := db.NewStore(connPool)
-	server := api.NewServer(store)
+	server := api.NewServer(store, nil)
 
 	err = server.Run(config.ServerAddr)
 	if err != nil {
