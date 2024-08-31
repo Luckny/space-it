@@ -5,7 +5,6 @@ import (
 	"net/http"
 	"testing"
 
-	"github.com/Luckny/space-it/util"
 	"github.com/google/uuid"
 	"github.com/stretchr/testify/require"
 )
@@ -13,7 +12,6 @@ import (
 func createTestUnAuthenticatedRequestLog(t *testing.T, userID uuid.UUID) RequestLog {
 
 	arg := CreateUnauthenticatedRequestLogParams{
-		ID:     util.GenUUID(),
 		Method: http.MethodGet,
 		Path:   "/somepath",
 	}
@@ -22,10 +20,10 @@ func createTestUnAuthenticatedRequestLog(t *testing.T, userID uuid.UUID) Request
 	require.NoError(t, err)
 	require.NotEmpty(t, reqLog)
 
-	require.Equal(t, arg.ID, reqLog.ID)
 	require.Equal(t, arg.Method, reqLog.Method)
 	require.Equal(t, arg.Path, reqLog.Path)
 
+	require.NotZero(t, reqLog.ID)
 	require.NotZero(t, reqLog.CreatedAt)
 
 	return reqLog

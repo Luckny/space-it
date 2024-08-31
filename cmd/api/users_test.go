@@ -33,7 +33,6 @@ func TestRegisterUserAPI(t *testing.T) {
 
 			buildStubs: func(store *mockdb.MockStore) {
 				arg := db.RegisterUserParams{
-					ID:       user.ID,
 					Email:    user.Email,
 					Password: unHashedPassword,
 				}

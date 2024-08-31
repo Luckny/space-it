@@ -7,8 +7,6 @@ package db
 
 import (
 	"context"
-
-	"github.com/google/uuid"
 )
 
 const getUserByEmail = `-- name: GetUserByEmail :one
@@ -29,19 +27,18 @@ func (q *Queries) GetUserByEmail(ctx context.Context, email string) (User, error
 }
 
 const registerUser = `-- name: RegisterUser :one
-INSERT INTO users (id, email, password)
-VALUES ( $1, $2, $3)
+INSERT INTO users (email, password)
+VALUES ( $1, $2)
 RETURNING id, email, password, created_at
 `
 
 type RegisterUserParams struct {
-	ID       uuid.UUID `json:"id"`
-	Email    string    `json:"email"`
-	Password string    `json:"password"`
+	Email    string `json:"email"`
+	Password string `json:"password"`
 }
 
 func (q *Queries) RegisterUser(ctx context.Context, arg RegisterUserParams) (User, error) {
-	row := q.db.QueryRow(ctx, registerUser, arg.ID, arg.Email, arg.Password)
+	row := q.db.QueryRow(ctx, registerUser, arg.Email, arg.Password)
 	var i User
 	err := row.Scan(
 		&i.ID,

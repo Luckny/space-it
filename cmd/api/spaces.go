@@ -5,7 +5,6 @@ import (
 
 	db "github.com/Luckny/space-it/db/sqlc"
 	"github.com/Luckny/space-it/pkg/httpx"
-	"github.com/Luckny/space-it/util"
 	"github.com/gin-gonic/gin"
 )
 
@@ -25,7 +24,6 @@ func (server *Server) createSpace(ctx *gin.Context) {
 	user, _ := httpx.GetUserFromContext(ctx)
 
 	arg := db.CreateSpaceParams{
-		ID:    util.GenUUID(),
 		Name:  req.Name,
 		Owner: user.ID,
 	}

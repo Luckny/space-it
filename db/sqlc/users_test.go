@@ -11,7 +11,6 @@ import (
 
 func createRandomUser(t *testing.T) User {
 	arg := RegisterUserParams{
-		ID:       util.GenUUID(),
 		Email:    util.RandomEmail(),
 		Password: util.RandomPassword(),
 	}

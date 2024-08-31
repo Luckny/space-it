@@ -1,6 +1,6 @@
 -- name: CreateSpace :one
-INSERT INTO spaces (id, name, owner)
-VALUES ($1, $2, $3)
+INSERT INTO spaces (name, owner)
+VALUES ($1, $2)
 RETURNING *;
 
 -- name: GetSpaceByID :one

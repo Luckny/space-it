@@ -42,7 +42,7 @@ func Authenticate(store db.Store) gin.HandlerFunc {
 
 		// set user email in context if no error
 		if err := util.CheckPassword(password, user.Password); err == nil {
-			ctx.Set("user", user)
+			ctx.Set("user", &user)
 		}
 
 		ctx.Next()

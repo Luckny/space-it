@@ -11,7 +11,6 @@ import (
 
 	mockdb "github.com/Luckny/space-it/db/mock"
 	db "github.com/Luckny/space-it/db/sqlc"
-	"github.com/Luckny/space-it/util"
 	"github.com/gin-gonic/gin"
 	"github.com/stretchr/testify/require"
 	"go.uber.org/mock/gomock"
@@ -35,7 +34,6 @@ func TestCreateSpaceAPI(t *testing.T) {
 			},
 			buildStubs: func(store *mockdb.MockStore) {
 				arg := db.CreateSpaceParams{
-					ID:    util.GenUUID(),
 					Name:  space.Name,
 					Owner: user.ID,
 				}

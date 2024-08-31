@@ -2,7 +2,7 @@ GRANT CONNECT ON DATABASE space_it TO space_it_api;
 GRANT USAGE ON SCHEMA public TO space_it_api;
 
 CREATE TABLE "users" (
-  "id" uuid PRIMARY KEY,
+  "id" uuid PRIMARY KEY DEFAULT gen_random_uuid(),
   "email" VARCHAR(30) UNIQUE NOT NULL,
   "password" varchar(255) NOT NULL,
   "created_at" timestamp NOT NULL DEFAULT (now())
@@ -11,7 +11,7 @@ CREATE TABLE "users" (
 GRANT SELECT, INSERT ON users TO space_it_api;
 
 CREATE TABLE "spaces" (
-  "id" uuid PRIMARY KEY,
+  "id" uuid PRIMARY KEY DEFAULT gen_random_uuid(),
   "name" VARCHAR(30) UNIQUE NOT NULL,
   "owner" uuid NOT NULL,
   "created_at" timestamp NOT NULL DEFAULT (now())
@@ -20,7 +20,7 @@ CREATE TABLE "spaces" (
 GRANT SELECT, INSERT, UPDATE, DELETE ON spaces TO space_it_api;
 
 CREATE TABLE "messages" (
-  "id" uuid PRIMARY KEY,
+  "id" uuid PRIMARY KEY DEFAULT gen_random_uuid(),
   "space_id" uuid NOT NULL,
   "author" uuid NOT NULL,
   "created_at" timestamp NOT NULL DEFAULT (now())
@@ -29,7 +29,7 @@ CREATE TABLE "messages" (
 GRANT SELECT, INSERT ON messages TO space_it_api;
 
 CREATE TABLE "request_log" (
-  "id" uuid PRIMARY KEY,
+  "id" uuid PRIMARY KEY DEFAULT gen_random_uuid(),
   "method" varchar(10) NOT NULL,
   "path" varchar(100) NOT NULL,
   "user_id" uuid DEFAULT NULL,

@@ -12,19 +12,18 @@ import (
 )
 
 const createSpace = `-- name: CreateSpace :one
-INSERT INTO spaces (id, name, owner)
-VALUES ($1, $2, $3)
+INSERT INTO spaces (name, owner)
+VALUES ($1, $2)
 RETURNING id, name, owner, created_at
 `
 
 type CreateSpaceParams struct {
-	ID    uuid.UUID `json:"id"`
 	Name  string    `json:"name"`
 	Owner uuid.UUID `json:"owner"`
 }
 
 func (q *Queries) CreateSpace(ctx context.Context, arg CreateSpaceParams) (Space, error) {
-	row := q.db.QueryRow(ctx, createSpace, arg.ID, arg.Name, arg.Owner)
+	row := q.db.QueryRow(ctx, createSpace, arg.Name, arg.Owner)
 	var i Space
 	err := row.Scan(
 		&i.ID,

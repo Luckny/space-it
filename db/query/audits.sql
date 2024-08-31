@@ -1,11 +1,11 @@
 -- name: CreateAuthenticatedRequestLog :one
-INSERT INTO request_log (id, method, path, user_id)
-VALUES ($1, $2, $3, $4)
+INSERT INTO request_log (method, path, user_id)
+VALUES ($1, $2, $3)
 RETURNING *;
 
 -- name: CreateUnauthenticatedRequestLog :one
-INSERT INTO request_log (id, method, path)
-VALUES ($1, $2, $3)
+INSERT INTO request_log (method, path)
+VALUES ($1, $2)
 RETURNING *;
 
 -- name: CreateResponseLog :one

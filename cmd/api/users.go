@@ -29,7 +29,6 @@ func (server *Server) registerUser(ctx *gin.Context) {
 	}
 
 	arg := db.RegisterUserParams{
-		ID:       util.GenUUID(),
 		Email:    req.Email,
 		Password: passwordHash,
 	}

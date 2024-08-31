@@ -43,16 +43,14 @@ func logRequest(ctx *gin.Context, store db.Store) (db.RequestLog, error) {
 	if u != nil {
 		// Handle authenticated request logging
 		arg := db.CreateAuthenticatedRequestLogParams{
-			ID:     util.GenUUID(),
 			Path:   ctx.Request.URL.Path,
 			Method: ctx.Request.Method,
-			UserID: u.(db.User).ID,
+			UserID: u.(*db.User).ID,
 		}
 		return store.CreateAuthenticatedRequestLog(ctx, arg)
 	} else {
 		// Handle unauthenticated request logging
 		arg := db.CreateUnauthenticatedRequestLogParams{
-			ID:     util.GenUUID(),
 			Path:   ctx.Request.URL.Path,
 			Method: ctx.Request.Method,
 		}

@@ -13,7 +13,6 @@ import (
 func createRandomSpace(t *testing.T, user User) Space {
 
 	arg := CreateSpaceParams{
-		ID:    util.GenUUID(),
 		Name:  util.RandomSpaceName(),
 		Owner: user.ID,
 	}
@@ -24,8 +23,8 @@ func createRandomSpace(t *testing.T, user User) Space {
 
 	require.Equal(t, user.ID, space.Owner)
 	require.Equal(t, arg.Name, space.Name)
-	require.Equal(t, arg.ID, space.ID)
 
+	require.NotZero(t, space.ID)
 	require.NotZero(t, space.CreatedAt)
 
 	return space

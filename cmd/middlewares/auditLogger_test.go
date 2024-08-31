@@ -47,7 +47,6 @@ func TestAuditLogger(t *testing.T) {
 			buildStubs: func(store *mockdb.MockStore) {
 
 				reqLogArg := db.CreateUnauthenticatedRequestLogParams{
-					ID:     util.GenUUID(),
 					Path:   reqLog.Path,
 					Method: reqLog.Method,
 				}
@@ -80,7 +79,6 @@ func TestAuditLogger(t *testing.T) {
 			buildStubs: func(store *mockdb.MockStore) {
 
 				reqLogArg := db.CreateAuthenticatedRequestLogParams{
-					ID:     util.GenUUID(),
 					Path:   reqLog.Path,
 					Method: reqLog.Method,
 					UserID: user.ID,
@@ -134,7 +132,6 @@ func TestAuditLogger(t *testing.T) {
 			path: reqLog.Path,
 			buildStubs: func(store *mockdb.MockStore) {
 				reqLogArg := db.CreateUnauthenticatedRequestLogParams{
-					ID:     util.GenUUID(),
 					Path:   reqLog.Path,
 					Method: reqLog.Method,
 				}

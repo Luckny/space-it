@@ -12,25 +12,19 @@ import (
 )
 
 const createAuthenticatedRequestLog = `-- name: CreateAuthenticatedRequestLog :one
-INSERT INTO request_log (id, method, path, user_id)
-VALUES ($1, $2, $3, $4)
+INSERT INTO request_log (method, path, user_id)
+VALUES ($1, $2, $3)
 RETURNING id, method, path, user_id, created_at
 `
 
 type CreateAuthenticatedRequestLogParams struct {
-	ID     uuid.UUID `json:"id"`
 	Method string    `json:"method"`
 	Path   string    `json:"path"`
 	UserID uuid.UUID `json:"user_id"`
 }
 
 func (q *Queries) CreateAuthenticatedRequestLog(ctx context.Context, arg CreateAuthenticatedRequestLogParams) (RequestLog, error) {
-	row := q.db.QueryRow(ctx, createAuthenticatedRequestLog,
-		arg.ID,
-		arg.Method,
-		arg.Path,
-		arg.UserID,
-	)
+	row := q.db.QueryRow(ctx, createAuthenticatedRequestLog, arg.Method, arg.Path, arg.UserID)
 	var i RequestLog
 	err := row.Scan(
 		&i.ID,
@@ -61,19 +55,18 @@ func (q *Queries) CreateResponseLog(ctx context.Context, arg CreateResponseLogPa
 }
 
 const createUnauthenticatedRequestLog = `-- name: CreateUnauthenticatedRequestLog :one
-INSERT INTO request_log (id, method, path)
-VALUES ($1, $2, $3)
+INSERT INTO request_log (method, path)
+VALUES ($1, $2)
 RETURNING id, method, path, user_id, created_at
 `
 
 type CreateUnauthenticatedRequestLogParams struct {
-	ID     uuid.UUID `json:"id"`
-	Method string    `json:"method"`
-	Path   string    `json:"path"`
+	Method string `json:"method"`
+	Path   string `json:"path"`
 }
 
 func (q *Queries) CreateUnauthenticatedRequestLog(ctx context.Context, arg CreateUnauthenticatedRequestLogParams) (RequestLog, error) {
-	row := q.db.QueryRow(ctx, createUnauthenticatedRequestLog, arg.ID, arg.Method, arg.Path)
+	row := q.db.QueryRow(ctx, createUnauthenticatedRequestLog, arg.Method, arg.Path)
 	var i RequestLog
 	err := row.Scan(
 		&i.ID,
