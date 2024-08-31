@@ -1,5 +1,6 @@
 DROP TABLE IF EXISTS "response_log";
 DROP TABLE IF EXISTS "request_log";
 DROP TABLE IF EXISTS "messages";
+DROP TABLE IF EXISTS "permissions";
 DROP TABLE IF EXISTS "spaces";
 DROP TABLE IF EXISTS "users";

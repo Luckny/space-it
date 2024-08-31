@@ -52,6 +52,8 @@ CREATE TABLE "permissions" (
   "read_permission" bool NOT NULL DEFAULT false,
   "write_permission" bool NOT NULL DEFAULT false,
   "delete_permission" bool NOT NULL DEFAULT false,
+  "created_at" timestamp NOT NULL DEFAULT (now()),
+  "updated_at" timestamp NOT NULL DEFAULT (now()),
   PRIMARY KEY ("user_id", "space_id")
 );
 
@@ -76,6 +78,8 @@ CREATE INDEX ON "request_log" ("method");
 CREATE INDEX ON "request_log" ("path", "method");
 
 CREATE INDEX ON "response_log" ("status");
+
+CREATE INDEX ON "permissions" ("updated_at");
 
 ALTER TABLE "spaces" ADD FOREIGN KEY ("owner") REFERENCES "users" ("id");
 
