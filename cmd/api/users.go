@@ -1,12 +1,15 @@
 package api
 
 import (
+	"errors"
+	"fmt"
 	"net/http"
 
 	db "github.com/Luckny/space-it/db/sqlc"
 	"github.com/Luckny/space-it/pkg/httpx"
 	"github.com/Luckny/space-it/util"
 	"github.com/gin-gonic/gin"
+	"github.com/jackc/pgx/v5/pgconn"
 )
 
 type registerUserRequest struct {
@@ -35,9 +38,32 @@ func (server *Server) registerUser(ctx *gin.Context) {
 
 	user, err := server.store.RegisterUser(ctx, arg)
 	if err != nil {
-		httpx.WriteError(ctx, http.StatusInternalServerError, err)
+		handleRegisterUserError(ctx, err)
 		return
 	}
 
 	httpx.WriteResponse(ctx, http.StatusCreated, user)
+}
+
+func handleRegisterUserError(ctx *gin.Context, err error) {
+	var pgErr *pgconn.PgError
+	// if not a pg error return generic error
+	if !errors.As(err, &pgErr) {
+		httpx.WriteError(ctx, http.StatusInternalServerError, err)
+		return
+	}
+
+	switch pgErr.Code {
+	case db.ErrUniqueViolation.Code:
+		httpx.WriteError(ctx, http.StatusConflict, fmt.Errorf("user already exists"))
+		break
+
+	default:
+		util.InfoLog.Println("im insinge")
+		httpx.WriteError(ctx, http.StatusInternalServerError, err)
+		break
+	}
+
+	return
+
 }
