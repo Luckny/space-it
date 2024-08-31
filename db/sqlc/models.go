@@ -16,6 +16,16 @@ type Message struct {
 	CreatedAt pgtype.Timestamp `json:"created_at"`
 }
 
+type Permission struct {
+	SpaceID          uuid.UUID        `json:"space_id"`
+	UserID           uuid.UUID        `json:"user_id"`
+	ReadPermission   bool             `json:"read_permission"`
+	WritePermission  bool             `json:"write_permission"`
+	DeletePermission bool             `json:"delete_permission"`
+	CreatedAt        pgtype.Timestamp `json:"created_at"`
+	UpdatedAt        pgtype.Timestamp `json:"updated_at"`
+}
+
 type RequestLog struct {
 	ID        uuid.UUID        `json:"id"`
 	Method    string           `json:"method"`

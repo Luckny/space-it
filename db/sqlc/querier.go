@@ -11,11 +11,17 @@ import (
 )
 
 type Querier interface {
+	CreateAllPermission(ctx context.Context, arg CreateAllPermissionParams) (Permission, error)
 	CreateAuthenticatedRequestLog(ctx context.Context, arg CreateAuthenticatedRequestLogParams) (RequestLog, error)
+	CreateDeletePermission(ctx context.Context, arg CreateDeletePermissionParams) (Permission, error)
+	CreatePermission(ctx context.Context, arg CreatePermissionParams) (Permission, error)
+	CreateReadPermission(ctx context.Context, arg CreateReadPermissionParams) (Permission, error)
 	CreateResponseLog(ctx context.Context, arg CreateResponseLogParams) (ResponseLog, error)
 	CreateSpace(ctx context.Context, arg CreateSpaceParams) (Space, error)
 	CreateUnauthenticatedRequestLog(ctx context.Context, arg CreateUnauthenticatedRequestLogParams) (RequestLog, error)
+	CreateWritePermission(ctx context.Context, arg CreateWritePermissionParams) (Permission, error)
 	DeleteSpace(ctx context.Context, id uuid.UUID) error
+	GetPermissionsByUserAndSpaceID(ctx context.Context, arg GetPermissionsByUserAndSpaceIDParams) (Permission, error)
 	GetSpaceByID(ctx context.Context, id uuid.UUID) (Space, error)
 	GetSpaceByName(ctx context.Context, name string) (Space, error)
 	GetUserByEmail(ctx context.Context, email string) (User, error)

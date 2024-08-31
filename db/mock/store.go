@@ -41,6 +41,21 @@ func (m *MockStore) EXPECT() *MockStoreMockRecorder {
 	return m.recorder
 }
 
+// CreateAllPermission mocks base method.
+func (m *MockStore) CreateAllPermission(arg0 context.Context, arg1 db.CreateAllPermissionParams) (db.Permission, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "CreateAllPermission", arg0, arg1)
+	ret0, _ := ret[0].(db.Permission)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// CreateAllPermission indicates an expected call of CreateAllPermission.
+func (mr *MockStoreMockRecorder) CreateAllPermission(arg0, arg1 any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateAllPermission", reflect.TypeOf((*MockStore)(nil).CreateAllPermission), arg0, arg1)
+}
+
 // CreateAuthenticatedRequestLog mocks base method.
 func (m *MockStore) CreateAuthenticatedRequestLog(arg0 context.Context, arg1 db.CreateAuthenticatedRequestLogParams) (db.RequestLog, error) {
 	m.ctrl.T.Helper()
@@ -54,6 +69,51 @@ func (m *MockStore) CreateAuthenticatedRequestLog(arg0 context.Context, arg1 db.
 func (mr *MockStoreMockRecorder) CreateAuthenticatedRequestLog(arg0, arg1 any) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateAuthenticatedRequestLog", reflect.TypeOf((*MockStore)(nil).CreateAuthenticatedRequestLog), arg0, arg1)
+}
+
+// CreateDeletePermission mocks base method.
+func (m *MockStore) CreateDeletePermission(arg0 context.Context, arg1 db.CreateDeletePermissionParams) (db.Permission, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "CreateDeletePermission", arg0, arg1)
+	ret0, _ := ret[0].(db.Permission)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// CreateDeletePermission indicates an expected call of CreateDeletePermission.
+func (mr *MockStoreMockRecorder) CreateDeletePermission(arg0, arg1 any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateDeletePermission", reflect.TypeOf((*MockStore)(nil).CreateDeletePermission), arg0, arg1)
+}
+
+// CreatePermission mocks base method.
+func (m *MockStore) CreatePermission(arg0 context.Context, arg1 db.CreatePermissionParams) (db.Permission, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "CreatePermission", arg0, arg1)
+	ret0, _ := ret[0].(db.Permission)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// CreatePermission indicates an expected call of CreatePermission.
+func (mr *MockStoreMockRecorder) CreatePermission(arg0, arg1 any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreatePermission", reflect.TypeOf((*MockStore)(nil).CreatePermission), arg0, arg1)
+}
+
+// CreateReadPermission mocks base method.
+func (m *MockStore) CreateReadPermission(arg0 context.Context, arg1 db.CreateReadPermissionParams) (db.Permission, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "CreateReadPermission", arg0, arg1)
+	ret0, _ := ret[0].(db.Permission)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// CreateReadPermission indicates an expected call of CreateReadPermission.
+func (mr *MockStoreMockRecorder) CreateReadPermission(arg0, arg1 any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateReadPermission", reflect.TypeOf((*MockStore)(nil).CreateReadPermission), arg0, arg1)
 }
 
 // CreateResponseLog mocks base method.
@@ -101,6 +161,21 @@ func (mr *MockStoreMockRecorder) CreateUnauthenticatedRequestLog(arg0, arg1 any)
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateUnauthenticatedRequestLog", reflect.TypeOf((*MockStore)(nil).CreateUnauthenticatedRequestLog), arg0, arg1)
 }
 
+// CreateWritePermission mocks base method.
+func (m *MockStore) CreateWritePermission(arg0 context.Context, arg1 db.CreateWritePermissionParams) (db.Permission, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "CreateWritePermission", arg0, arg1)
+	ret0, _ := ret[0].(db.Permission)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// CreateWritePermission indicates an expected call of CreateWritePermission.
+func (mr *MockStoreMockRecorder) CreateWritePermission(arg0, arg1 any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateWritePermission", reflect.TypeOf((*MockStore)(nil).CreateWritePermission), arg0, arg1)
+}
+
 // DeleteSpace mocks base method.
 func (m *MockStore) DeleteSpace(arg0 context.Context, arg1 uuid.UUID) error {
 	m.ctrl.T.Helper()
@@ -113,6 +188,21 @@ func (m *MockStore) DeleteSpace(arg0 context.Context, arg1 uuid.UUID) error {
 func (mr *MockStoreMockRecorder) DeleteSpace(arg0, arg1 any) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DeleteSpace", reflect.TypeOf((*MockStore)(nil).DeleteSpace), arg0, arg1)
+}
+
+// GetPermissionsByUserAndSpaceID mocks base method.
+func (m *MockStore) GetPermissionsByUserAndSpaceID(arg0 context.Context, arg1 db.GetPermissionsByUserAndSpaceIDParams) (db.Permission, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GetPermissionsByUserAndSpaceID", arg0, arg1)
+	ret0, _ := ret[0].(db.Permission)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// GetPermissionsByUserAndSpaceID indicates an expected call of GetPermissionsByUserAndSpaceID.
+func (mr *MockStoreMockRecorder) GetPermissionsByUserAndSpaceID(arg0, arg1 any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetPermissionsByUserAndSpaceID", reflect.TypeOf((*MockStore)(nil).GetPermissionsByUserAndSpaceID), arg0, arg1)
 }
 
 // GetSpaceByID mocks base method.
