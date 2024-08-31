@@ -20,3 +20,7 @@ var ErrUniqueViolation = &pgconn.PgError{
 var ErrConnectionFailure = &pgconn.PgError{
 	Code: ConnectionFailure,
 }
+
+var ErrForeignKeyConstraint = &pgconn.PgError{
+	Code: ForeignKeyViolation,
+}

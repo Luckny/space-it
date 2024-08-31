@@ -29,6 +29,9 @@ func NewServer(store db.Store) *Server {
 
 	router.POST("/users", server.registerUser)
 
+	router.Use(middlewares.RequireAuthentication())
+	router.POST("/spaces", server.createSpace)
+
 	server.Router = ginDefault
 	return server
 }

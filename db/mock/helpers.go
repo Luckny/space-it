@@ -25,3 +25,16 @@ func RandomUser(t *testing.T) (db.User, string) {
 
 	return user, pass
 }
+
+// RandomSpace generates a random db.Space object
+func RandomSpace(t *testing.T) db.Space {
+	user, _ := RandomUser(t)
+
+	space := db.Space{
+		Name:      util.RandomSpaceName(),
+		Owner:     user.ID,
+		CreatedAt: pgtype.Timestamp{Time: time.Now()},
+	}
+
+	return space
+}
