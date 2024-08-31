@@ -6,7 +6,6 @@ import (
 	"io"
 	"net/http"
 	"net/http/httptest"
-	"net/url"
 	"testing"
 
 	mockdb "github.com/Luckny/space-it/db/mock"
@@ -115,25 +114,6 @@ func TestCreateSpaceAPI(t *testing.T) {
 			tc.checkResponse(recorder)
 		})
 	}
-}
-
-func MockAuthenticatedRequest(ctx *gin.Context, user db.User, p gin.Params, u url.Values) {
-	ctx.Request.Method = "GET"
-	ctx.Set("user", user)
-
-	ctx.Params = p
-	ctx.Request.URL.RawQuery = u.Encode()
-}
-
-func GetTestGinContext(rr *httptest.ResponseRecorder) *gin.Context {
-	gin.SetMode(gin.TestMode)
-
-	ctx, _ := gin.CreateTestContext(rr)
-	ctx.Request = &http.Request{
-		Header: make(http.Header),
-		URL:    &url.URL{},
-	}
-	return ctx
 }
 
 // requireBodyMatchUser checks that the user in the body matches the recieved user
