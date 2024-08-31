@@ -1,6 +1,8 @@
 package api
 
 import (
+	"net/http"
+
 	"github.com/Luckny/space-it/cmd/middlewares"
 	db "github.com/Luckny/space-it/db/sqlc"
 	"github.com/gin-gonic/gin"
@@ -31,6 +33,11 @@ func NewServer(store db.Store) *Server {
 
 	router.Use(middlewares.RequireAuthentication())
 	router.POST("/spaces", server.createSpace)
+
+	router.Use(middlewares.RequireSpacePermission(store))
+	router.POST("/spaces/:spaceID/messages", func(c *gin.Context) {
+		c.JSON(http.StatusCreated, "reached test postmessage handler")
+	})
 
 	server.Router = ginDefault
 	return server

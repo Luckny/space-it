@@ -1,11 +1,15 @@
 package api
 
 import (
+	"errors"
+	"fmt"
 	"net/http"
 
 	db "github.com/Luckny/space-it/db/sqlc"
 	"github.com/Luckny/space-it/pkg/httpx"
+	"github.com/Luckny/space-it/util"
 	"github.com/gin-gonic/gin"
+	"github.com/jackc/pgx/v5/pgconn"
 )
 
 type createSpaceRequest struct {
@@ -28,13 +32,34 @@ func (server *Server) createSpace(ctx *gin.Context) {
 		Owner: user.ID,
 	}
 
-	// TODO: check if space name already exists
-
 	space, err := server.store.CreateSpace(ctx, arg)
 	if err != nil {
-		httpx.WriteError(ctx, http.StatusInternalServerError, err)
+		handleCreateSpaceError(ctx, err)
 		return
 	}
 
 	httpx.WriteResponse(ctx, http.StatusCreated, space)
+}
+
+func handleCreateSpaceError(ctx *gin.Context, err error) {
+	var pgErr *pgconn.PgError
+	// if not a pg error return generic error
+	if !errors.As(err, &pgErr) {
+		httpx.WriteError(ctx, http.StatusInternalServerError, err)
+		return
+	}
+
+	switch pgErr.Code {
+	case db.ErrUniqueViolation.Code:
+		httpx.WriteError(ctx, http.StatusConflict, fmt.Errorf("space with name already exists"))
+		break
+
+	default:
+		util.InfoLog.Println("im insinge")
+		httpx.WriteError(ctx, http.StatusInternalServerError, err)
+		break
+	}
+
+	return
+
 }

@@ -9,6 +9,7 @@ import (
 	"github.com/Luckny/space-it/pkg/httpx"
 	"github.com/Luckny/space-it/util"
 	"github.com/gin-gonic/gin"
+	"github.com/google/uuid"
 )
 
 func Authenticate(store db.Store) gin.HandlerFunc {
@@ -57,6 +58,66 @@ func RequireAuthentication() gin.HandlerFunc {
 			httpx.WriteError(ctx, http.StatusUnauthorized, fmt.Errorf("who are you?"))
 			ctx.Abort()
 			return
+		}
+
+		ctx.Next()
+	}
+}
+
+func RequireSpacePermission(store db.Store) gin.HandlerFunc {
+	return func(ctx *gin.Context) {
+		user, _ := httpx.GetUserFromContext(ctx)
+
+		spaceID, err := uuid.Parse(ctx.Param("spaceID"))
+		if err != nil {
+			util.InfoLog.Println("i really made it", spaceID)
+			httpx.WriteError(ctx, http.StatusInternalServerError, err)
+			ctx.Abort()
+			return
+		}
+
+		arg := db.GetPermissionsByUserAndSpaceIDParams{
+			UserID:  user.ID,
+			SpaceID: spaceID,
+		}
+
+		permission, err := store.GetPermissionsByUserAndSpaceID(ctx, arg)
+		if err != nil {
+			if err == db.ErrRecordNotFound {
+				httpx.WriteError(ctx, http.StatusForbidden, fmt.Errorf("you cant do that"))
+				ctx.Abort()
+				return
+			}
+			httpx.WriteError(ctx, http.StatusInternalServerError, err)
+			ctx.Abort()
+			return
+		}
+
+		method := ctx.Request.Method
+		switch method {
+		case "POST":
+			if !permission.WritePermission {
+				httpx.WriteError(ctx, http.StatusForbidden, fmt.Errorf("you cant do that"))
+				ctx.Abort()
+				return
+			}
+			break
+
+		case "GET":
+			if !permission.ReadPermission {
+				httpx.WriteError(ctx, http.StatusForbidden, fmt.Errorf("you cant do that"))
+				ctx.Abort()
+				return
+			}
+			break
+
+		case "DELETE":
+			if !permission.DeletePermission {
+				httpx.WriteError(ctx, http.StatusForbidden, fmt.Errorf("you cant do that"))
+				ctx.Abort()
+				return
+			}
+			break
 		}
 
 		ctx.Next()
