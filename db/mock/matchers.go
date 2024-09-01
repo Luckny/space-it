@@ -117,12 +117,12 @@ func EqResponseLogParam(
 
 // Create space matcher
 
-type eqCreateSpaceParam struct {
-	arg db.CreateSpaceParams
+type eqCreateSpaceTxParam struct {
+	arg db.CreateSpaceTxParams
 }
 
-func (e eqCreateSpaceParam) Matches(x interface{}) bool {
-	arg, ok := x.(db.CreateSpaceParams)
+func (e eqCreateSpaceTxParam) Matches(x interface{}) bool {
+	arg, ok := x.(db.CreateSpaceTxParams)
 	if !ok {
 		return false
 	}
@@ -131,12 +131,12 @@ func (e eqCreateSpaceParam) Matches(x interface{}) bool {
 		reflect.DeepEqual(e.arg.Owner, arg.Owner)
 }
 
-func (e eqCreateSpaceParam) String() string {
+func (e eqCreateSpaceTxParam) String() string {
 	return fmt.Sprintf("matches arg %v", e.arg)
 }
 
-func EqCreateSpaceParam(
-	arg db.CreateSpaceParams,
+func EqCreateSpaceTxParam(
+	arg db.CreateSpaceTxParams,
 ) gomock.Matcher {
-	return eqCreateSpaceParam{arg}
+	return eqCreateSpaceTxParam{arg}
 }

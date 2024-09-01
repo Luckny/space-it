@@ -109,7 +109,7 @@ func TestRegisterUserAPI(t *testing.T) {
 			},
 
 			checkResponse: func(recorder *httptest.ResponseRecorder) {
-				require.Equal(t, http.StatusInternalServerError, recorder.Code)
+				require.Equal(t, http.StatusConflict, recorder.Code)
 			},
 		},
 	}

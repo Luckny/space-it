@@ -59,3 +59,13 @@ func CreatePermission(
 
 	return perm
 }
+
+// RandomSpaceTxResult generates a random db.CreateSpaceTxResult
+func RandomSpaceTxResult(t *testing.T, userId uuid.UUID) db.CreateSpaceTxResult {
+	space := RandomSpace(t, userId)
+	perm := CreatePermission(t, userId, space.ID, true, true, true)
+	return db.CreateSpaceTxResult{
+		Space:      space,
+		Permission: perm,
+	}
+}

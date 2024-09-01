@@ -17,7 +17,8 @@ import (
 
 func TestCreateSpaceAPI(t *testing.T) {
 	user, _ := mockdb.RandomUser(t)
-	space := mockdb.RandomSpace(t, user.ID)
+	spaceTxResult := mockdb.RandomSpaceTxResult(t, user.ID)
+	space := spaceTxResult.Space
 
 	testCases := []struct {
 		name          string
@@ -32,14 +33,14 @@ func TestCreateSpaceAPI(t *testing.T) {
 				Name: space.Name,
 			},
 			buildStubs: func(store *mockdb.MockStore) {
-				arg := db.CreateSpaceParams{
+				arg := db.CreateSpaceTxParams{
 					Name:  space.Name,
 					Owner: user.ID,
 				}
 				store.EXPECT().
-					CreateSpace(gomock.Any(), mockdb.EqCreateSpaceParam(arg)).
+					CreateSpaceTx(gomock.Any(), mockdb.EqCreateSpaceTxParam(arg)).
 					Times(1).
-					Return(space, nil)
+					Return(spaceTxResult, nil)
 			},
 			checkResponse: func(recorder *httptest.ResponseRecorder) {
 				require.Equal(t, recorder.Code, http.StatusCreated)
@@ -69,9 +70,9 @@ func TestCreateSpaceAPI(t *testing.T) {
 			},
 			buildStubs: func(store *mockdb.MockStore) {
 				store.EXPECT().
-					CreateSpace(gomock.Any(), gomock.Any()).
+					CreateSpaceTx(gomock.Any(), gomock.Any()).
 					Times(1).
-					Return(db.Space{}, db.ErrForeignKeyConstraint)
+					Return(db.CreateSpaceTxResult{}, db.ErrForeignKeyConstraint)
 			},
 			checkResponse: func(recorder *httptest.ResponseRecorder) {
 				require.Equal(t, recorder.Code, http.StatusInternalServerError)
