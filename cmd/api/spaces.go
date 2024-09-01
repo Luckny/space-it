@@ -27,18 +27,19 @@ func (server *Server) createSpace(ctx *gin.Context) {
 	// this handler requires authentication
 	user, _ := httpx.GetUserFromContext(ctx)
 
-	arg := db.CreateSpaceParams{
+	arg := db.CreateSpaceTxParams{
 		Name:  req.Name,
 		Owner: user.ID,
 	}
 
-	space, err := server.store.CreateSpace(ctx, arg)
+	// creates space and gives it owner permissions
+	spaceTxResult, err := server.store.CreateSpaceTx(ctx, arg)
 	if err != nil {
 		handleCreateSpaceError(ctx, err)
 		return
 	}
 
-	httpx.WriteResponse(ctx, http.StatusCreated, space)
+	httpx.WriteResponse(ctx, http.StatusCreated, spaceTxResult.Space)
 }
 
 func handleCreateSpaceError(ctx *gin.Context, err error) {

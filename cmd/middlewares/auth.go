@@ -34,6 +34,7 @@ func Authenticate(store db.Store) gin.HandlerFunc {
 		if err != nil {
 			if err == db.ErrRecordNotFound {
 				httpx.WriteError(ctx, http.StatusNotFound, fmt.Errorf("user not found"))
+				ctx.Abort()
 				return
 			}
 			httpx.WriteError(ctx, http.StatusInternalServerError, err)
@@ -84,7 +85,11 @@ func RequireSpacePermission(store db.Store) gin.HandlerFunc {
 		permission, err := store.GetPermissionsByUserAndSpaceID(ctx, arg)
 		if err != nil {
 			if err == db.ErrRecordNotFound {
-				httpx.WriteError(ctx, http.StatusForbidden, fmt.Errorf("you cant do that"))
+				httpx.WriteError(
+					ctx,
+					http.StatusForbidden,
+					fmt.Errorf("access denied: insufficient permissions"),
+				)
 				ctx.Abort()
 				return
 			}
@@ -97,7 +102,11 @@ func RequireSpacePermission(store db.Store) gin.HandlerFunc {
 		switch method {
 		case "POST":
 			if !permission.WritePermission {
-				httpx.WriteError(ctx, http.StatusForbidden, fmt.Errorf("you cant do that"))
+				httpx.WriteError(
+					ctx,
+					http.StatusForbidden,
+					fmt.Errorf("insufficient permissions: write access required"),
+				)
 				ctx.Abort()
 				return
 			}
@@ -105,7 +114,11 @@ func RequireSpacePermission(store db.Store) gin.HandlerFunc {
 
 		case "GET":
 			if !permission.ReadPermission {
-				httpx.WriteError(ctx, http.StatusForbidden, fmt.Errorf("you cant do that"))
+				httpx.WriteError(
+					ctx,
+					http.StatusForbidden,
+					fmt.Errorf("insufficient permissions: read access required"),
+				)
 				ctx.Abort()
 				return
 			}
@@ -113,7 +126,11 @@ func RequireSpacePermission(store db.Store) gin.HandlerFunc {
 
 		case "DELETE":
 			if !permission.DeletePermission {
-				httpx.WriteError(ctx, http.StatusForbidden, fmt.Errorf("you cant do that"))
+				httpx.WriteError(
+					ctx,
+					http.StatusForbidden,
+					fmt.Errorf("insufficient permissions: delete access required"),
+				)
 				ctx.Abort()
 				return
 			}
