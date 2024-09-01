@@ -6,6 +6,8 @@ import (
 	"github.com/Luckny/space-it/cmd/middlewares"
 	db "github.com/Luckny/space-it/db/sqlc"
 	"github.com/gin-gonic/gin"
+	"github.com/gin-gonic/gin/binding"
+	"github.com/go-playground/validator/v10"
 	"golang.org/x/time/rate"
 )
 
@@ -21,6 +23,10 @@ func NewServer(store db.Store) *Server {
 		Limiter: rate.NewLimiter(rate.Limit(2), 2),
 	}
 
+	if v, ok := binding.Validator.Engine().(*validator.Validate); ok {
+		v.RegisterValidation("accesslvl", middlewares.ValidAccessLvl)
+	}
+
 	ginDefault := gin.Default()
 	router := ginDefault.Group("/api/v1")
 
@@ -34,10 +40,19 @@ func NewServer(store db.Store) *Server {
 	router.Use(middlewares.RequireAuthentication())
 	router.POST("/spaces", server.createSpace)
 
-	router.Use(middlewares.RequireSpacePermission(store))
-	router.POST("/spaces/:spaceID/messages", func(c *gin.Context) {
-		c.JSON(http.StatusCreated, "reached test postmessage handler")
-	})
+	router.POST(
+		"/spaces/:spaceID/messages",
+		middlewares.RequireAccessLvl(middlewares.WriteAccess, store),
+		func(c *gin.Context) {
+			c.JSON(http.StatusNotImplemented, "not implemented")
+		},
+	)
+
+	router.POST(
+		"/spaces/:spaceID/members",
+		middlewares.RequireAccessLvl(middlewares.AdminAccess, store),
+		server.addMemberToSpace,
+	)
 
 	server.Router = ginDefault
 	return server
