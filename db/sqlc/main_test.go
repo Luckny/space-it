@@ -12,12 +12,7 @@ import (
 var testStore Store
 
 func TestMain(m *testing.M) {
-	config, err := util.LoadConfig("../..")
-	if err != nil {
-		util.ErrorLog.Fatal("cannot load config", err)
-	}
-
-	connPool, err := pgxpool.New(context.Background(), config.DBSource)
+	connPool, err := pgxpool.New(context.Background(), config.Envs.DBSource)
 	if err != nil {
 		util.ErrorLog.Fatal("cannot connect to db", err)
 	}

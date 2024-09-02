@@ -55,7 +55,7 @@ func RequireAuthentication() gin.HandlerFunc {
 		_, err := httpx.GetUserFromContext(ctx)
 		if err != nil {
 			ctx.Header("WWW-Authenticate", "Basic realm=\"/\", charset\"UTF-8\"")
-			httpx.WriteError(ctx, http.StatusUnauthorized, fmt.Errorf("who are you?"))
+			httpx.WriteError(ctx, http.StatusUnauthorized, fmt.Errorf("please authenticate"))
 			ctx.Abort()
 			return
 		}

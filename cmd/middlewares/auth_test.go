@@ -10,7 +10,6 @@ import (
 
 	mockdb "github.com/Luckny/space-it/db/mock"
 	db "github.com/Luckny/space-it/db/sqlc"
-	"github.com/Luckny/space-it/util"
 	"github.com/gin-gonic/gin"
 	"github.com/stretchr/testify/require"
 	"go.uber.org/mock/gomock"
@@ -59,7 +58,6 @@ func TestAuthenticate(t *testing.T) {
 				err = json.Unmarshal(data, &responseBodyUser)
 				require.NoError(t, err)
 
-				util.InfoLog.Println("res", responseBodyUser)
 				require.Zero(t, responseBodyUser)
 			},
 		},

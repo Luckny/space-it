@@ -6,6 +6,7 @@ import (
 
 	db "github.com/Luckny/space-it/db/sqlc"
 	"github.com/Luckny/space-it/pkg/httpx"
+	"github.com/Luckny/space-it/util"
 	"github.com/gin-gonic/gin"
 	"github.com/go-playground/validator/v10"
 	"github.com/google/uuid"
@@ -22,7 +23,12 @@ const (
 
 func RequireAccessLvl(accessLvl AccessLvl, store db.Store) gin.HandlerFunc {
 	return func(ctx *gin.Context) {
-		user, _ := httpx.GetUserFromContext(ctx)
+		user, err := httpx.GetUserFromContext(ctx)
+		if err != nil {
+			// user should be authenticated by the auth middlewares
+			util.ErrorLog.Panic(err)
+			return
+		}
 
 		spaceID, err := uuid.Parse(ctx.Param("spaceID"))
 		if err != nil {

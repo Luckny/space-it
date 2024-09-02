@@ -25,9 +25,12 @@ func (server *Server) createSpace(ctx *gin.Context) {
 		return
 	}
 
-	// error can safely be ignored here
-	// this handler requires authentication
-	user, _ := httpx.GetUserFromContext(ctx)
+	user, err := httpx.GetUserFromContext(ctx)
+	if err != nil {
+		// user should be authenticated by the auth middlewares
+		util.ErrorLog.Panic(err)
+		return
+	}
 
 	arg := db.CreateSpaceTxParams{
 		Name:  req.Name,
@@ -75,6 +78,7 @@ func (server *Server) addMemberToSpace(ctx *gin.Context) {
 
 	httpx.WriteResponse(ctx, http.StatusCreated, permission)
 }
+
 func handleCreateSpaceError(ctx *gin.Context, err error) {
 	var pgErr *pgconn.PgError
 	// if not a pg error return generic error
@@ -89,7 +93,6 @@ func handleCreateSpaceError(ctx *gin.Context, err error) {
 		break
 
 	default:
-		util.InfoLog.Println("im insinge")
 		httpx.WriteError(ctx, http.StatusInternalServerError, err)
 		break
 	}
