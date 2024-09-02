@@ -5,6 +5,7 @@ import (
 	"os"
 	"testing"
 
+	"github.com/Luckny/space-it/pkg/config"
 	"github.com/Luckny/space-it/util"
 	"github.com/jackc/pgx/v5/pgxpool"
 )

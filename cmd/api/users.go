@@ -6,7 +6,9 @@ import (
 	"net/http"
 
 	db "github.com/Luckny/space-it/db/sqlc"
+	"github.com/Luckny/space-it/pkg/config"
 	"github.com/Luckny/space-it/pkg/httpx"
+	"github.com/Luckny/space-it/pkg/token"
 	"github.com/Luckny/space-it/util"
 	"github.com/gin-gonic/gin"
 	"github.com/jackc/pgx/v5/pgconn"
@@ -45,6 +47,29 @@ func (server *Server) registerUser(ctx *gin.Context) {
 	httpx.WriteResponse(ctx, http.StatusCreated, user)
 }
 
+func (server *Server) loginUser(ctx *gin.Context) {
+	user, err := httpx.GetUserFromContext(ctx)
+	if err != nil {
+		// user should be authenticated by the auth middlewares
+		util.ErrorLog.Panic(err)
+		return
+	}
+
+	payload, err := token.NewPayload(*user, config.Envs.CookieAge)
+	if err != nil {
+		httpx.WriteError(ctx, http.StatusInternalServerError, err)
+		return
+	}
+
+	tokenId, err := server.tokenMaker.CreateToken(ctx, payload)
+	if err != nil {
+		httpx.WriteError(ctx, http.StatusInternalServerError, err)
+		return
+	}
+
+	httpx.WriteResponse(ctx, http.StatusCreated, map[string]string{"token": tokenId})
+}
+
 func handleRegisterUserError(ctx *gin.Context, err error) {
 	var pgErr *pgconn.PgError
 	// if not a pg error return generic error
@@ -59,11 +84,9 @@ func handleRegisterUserError(ctx *gin.Context, err error) {
 		break
 
 	default:
-		util.InfoLog.Println("im insinge")
 		httpx.WriteError(ctx, http.StatusInternalServerError, err)
 		break
 	}
 
 	return
-
 }
