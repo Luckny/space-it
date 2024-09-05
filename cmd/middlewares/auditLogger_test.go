@@ -9,8 +9,8 @@ import (
 
 	mockdb "github.com/Luckny/space-it/db/mock"
 	db "github.com/Luckny/space-it/db/sqlc"
-	"github.com/Luckny/space-it/util"
 	"github.com/gin-gonic/gin"
+	"github.com/google/uuid"
 	"github.com/jackc/pgx/v5/pgtype"
 	"github.com/stretchr/testify/require"
 	"go.uber.org/mock/gomock"
@@ -18,7 +18,7 @@ import (
 
 func TestAuditLogger(t *testing.T) {
 	reqLog := db.RequestLog{
-		ID:        util.GenUUID(),
+		ID:        uuid.New(),
 		Method:    "GET",
 		Path:      "/somepath",
 		CreatedAt: pgtype.Timestamp{Time: time.Now()},

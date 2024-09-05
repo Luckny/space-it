@@ -18,7 +18,7 @@ func RandomUser(t *testing.T) (db.User, string) {
 	require.NoError(t, err)
 
 	user := db.User{
-		ID:        util.GenUUID(),
+		ID:        uuid.New(),
 		Email:     util.RandomEmail(),
 		Password:  hash,
 		CreatedAt: pgtype.Timestamp{Time: time.Now()},
@@ -31,7 +31,7 @@ func RandomUser(t *testing.T) (db.User, string) {
 func RandomSpace(t *testing.T, userID uuid.UUID) db.Space {
 
 	space := db.Space{
-		ID:        util.GenUUID(),
+		ID:        uuid.New(),
 		Name:      util.RandomSpaceName(),
 		Owner:     userID,
 		CreatedAt: pgtype.Timestamp{Time: time.Now()},
