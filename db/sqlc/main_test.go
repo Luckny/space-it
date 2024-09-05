@@ -13,7 +13,8 @@ import (
 var testStore Store
 
 func TestMain(m *testing.M) {
-	connPool, err := pgxpool.New(context.Background(), config.Envs.DBSource)
+	config := config.Load("../../")
+	connPool, err := pgxpool.New(context.Background(), config.DBSource)
 	if err != nil {
 		util.ErrorLog.Fatal("cannot connect to db", err)
 	}

@@ -5,6 +5,7 @@ import (
 
 	"github.com/Luckny/space-it/cmd/middlewares"
 	db "github.com/Luckny/space-it/db/sqlc"
+	"github.com/Luckny/space-it/pkg/config"
 	"github.com/Luckny/space-it/pkg/token"
 	"github.com/gin-gonic/gin"
 	"github.com/gin-gonic/gin/binding"
@@ -17,13 +18,15 @@ type Server struct {
 	Router     *gin.Engine
 	Limiter    *rate.Limiter
 	tokenMaker token.Maker
+	Config     config.Config
 }
 
-func NewServer(store db.Store) *Server {
+func NewServer(store db.Store, config config.Config) *Server {
 	server := &Server{
 		store:      store,
 		Limiter:    rate.NewLimiter(rate.Limit(2), 2),
 		tokenMaker: token.NewCookieStore(),
+		Config:     config,
 	}
 
 	if v, ok := binding.Validator.Engine().(*validator.Validate); ok {

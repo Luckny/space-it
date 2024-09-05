@@ -6,7 +6,6 @@ import (
 	"net/http"
 
 	db "github.com/Luckny/space-it/db/sqlc"
-	"github.com/Luckny/space-it/pkg/config"
 	"github.com/Luckny/space-it/pkg/httpx"
 	"github.com/Luckny/space-it/pkg/token"
 	"github.com/Luckny/space-it/util"
@@ -55,7 +54,7 @@ func (server *Server) loginUser(ctx *gin.Context) {
 		return
 	}
 
-	payload, err := token.NewPayload(*user, config.Envs.CookieAge)
+	payload, err := token.NewPayload(*user, server.Config.CookieAge)
 	if err != nil {
 		httpx.WriteError(ctx, http.StatusInternalServerError, err)
 		return

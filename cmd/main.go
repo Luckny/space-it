@@ -12,15 +12,17 @@ import (
 )
 
 func main() {
-	connPool, err := pgxpool.New(context.Background(), config.Envs.DBSource)
+	config := config.Load(".")
+
+	connPool, err := pgxpool.New(context.Background(), config.DBSource)
 	if err != nil {
 		util.ErrorLog.Fatal("cannot connect to database", err)
 	}
 
 	store := db.NewStore(connPool)
-	server := api.NewServer(store)
+	server := api.NewServer(store, config)
 
-	err = server.Run(config.Envs.ServerAddr)
+	err = server.Run(config.ServerAddr)
 	if err != nil {
 		util.ErrorLog.Fatal("cannot start the server", err)
 	}

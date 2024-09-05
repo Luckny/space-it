@@ -10,6 +10,7 @@ import (
 
 	mockdb "github.com/Luckny/space-it/db/mock"
 	db "github.com/Luckny/space-it/db/sqlc"
+	"github.com/Luckny/space-it/pkg/config"
 	"github.com/gin-gonic/gin"
 	"github.com/stretchr/testify/require"
 	"go.uber.org/mock/gomock"
@@ -123,7 +124,7 @@ func TestRegisterUserAPI(t *testing.T) {
 			tc.buildStubs(store)
 
 			// api server with mock store
-			server := NewServer(store)
+			server := NewServer(store, config.Config{})
 			router := gin.Default()
 			router.POST("/users", server.registerUser)
 

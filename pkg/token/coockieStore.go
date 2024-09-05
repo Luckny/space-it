@@ -33,11 +33,12 @@ type CookieStore struct {
 var SessionName = "_HOST-session"
 
 func NewCookieStore() *CookieStore {
+	config := config.Load("../../")
 	return &CookieStore{
 		Name:     "_HOST-session",
-		store:    sessions.NewCookieStore([]byte(config.Envs.CookieSecret)),
-		secure:   config.Envs.CookieIsSecure,
-		httpOnly: config.Envs.CookieIsHttpOnly,
+		store:    sessions.NewCookieStore([]byte(config.CookieSecret)),
+		secure:   config.CookieIsSecure,
+		httpOnly: config.CookieIsHttpOnly,
 	}
 }
 
