@@ -6,7 +6,7 @@ import (
 )
 
 // Verify token
-func VerifyToken(token token.Maker) gin.HandlerFunc {
+func VerifyToken(maker token.Maker) gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 		// get token from header
 		tokenID := ctx.GetHeader("X-CSRF-Token")
@@ -16,7 +16,7 @@ func VerifyToken(token token.Maker) gin.HandlerFunc {
 		}
 
 		// validate token
-		token, err := token.VerifyToken(ctx, tokenID)
+		token, err := maker.VerifyToken(ctx, tokenID)
 		if err != nil {
 			// Token is invalid
 			ctx.Next()

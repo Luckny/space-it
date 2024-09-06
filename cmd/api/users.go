@@ -66,7 +66,7 @@ func (server *Server) loginUser(ctx *gin.Context) {
 		return
 	}
 
-	httpx.WriteResponse(ctx, http.StatusCreated, map[string]string{"token": tokenId})
+	httpx.WriteResponse(ctx, http.StatusOK, map[string]string{"token": tokenId})
 }
 
 func handleRegisterUserError(ctx *gin.Context, err error) {

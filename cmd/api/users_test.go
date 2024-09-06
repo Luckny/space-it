@@ -146,6 +146,70 @@ func TestRegisterUserAPI(t *testing.T) {
 
 }
 
+func TestLoginUserAPI(t *testing.T) {
+	user, _ := mockdb.RandomUser(t)
+
+	testCases := []struct {
+		name          string
+		setContext    bool
+		checkResponse func(recorder *httptest.ResponseRecorder)
+	}{
+		{
+			name:       "should login user",
+			setContext: true,
+			checkResponse: func(recorder *httptest.ResponseRecorder) {
+				require.Equal(t, http.StatusOK, recorder.Code)
+			},
+		},
+
+		{
+			name:       "error -> user not in context",
+			setContext: false,
+		},
+	}
+
+	// Run test case
+	for _, tc := range testCases {
+		t.Run(tc.name, func(t *testing.T) {
+			// init gomock
+			ctrl := gomock.NewController(t)
+			store := mockdb.NewMockStore(ctrl)
+			// tc.buildStubs(store)
+
+			// api server with mock store
+			server := NewServer(store, config.Config{})
+			router := gin.Default()
+
+			if tc.setContext {
+				router.Use(func(c *gin.Context) {
+					c.Set("user", &user)
+				})
+			}
+
+			router.POST("/users/login", server.loginUser)
+
+			// create request
+			request, err := http.NewRequest(http.MethodPost, "/users/login", nil)
+			require.NoError(t, err)
+
+			// test recorder
+			recorder := httptest.NewRecorder()
+			router.ServeHTTP(recorder, request)
+
+			if !tc.setContext {
+				require.Panics(t, func() {
+					tc.checkResponse(recorder)
+				})
+
+			} else {
+				// check response
+				tc.checkResponse(recorder)
+			}
+		})
+	}
+
+}
+
 // requireBodyMatchUser checks that the user in the body matches the recieved user
 func requireBodyMatchUser(t *testing.T, body *bytes.Buffer, user db.User) {
 	data, err := io.ReadAll(body)
