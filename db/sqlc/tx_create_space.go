@@ -23,8 +23,9 @@ func (store *SQLStore) CreateSpaceTx(
 	arg CreateSpaceTxParams,
 ) (CreateSpaceTxResult, error) {
 	var result CreateSpaceTxResult
+	var txErr error
 
-	store.execTx(ctx, func(q *Queries) error {
+	txErr = store.execTx(ctx, func(q *Queries) error {
 		var err error
 		result.Space, err = q.CreateSpace(ctx, CreateSpaceParams{
 			Name:  arg.Name,
@@ -40,6 +41,10 @@ func (store *SQLStore) CreateSpaceTx(
 		})
 		return err
 	})
+
+	if txErr != nil {
+		return CreateSpaceTxResult{}, txErr
+	}
 
 	return result, nil
 }

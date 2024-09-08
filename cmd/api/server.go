@@ -81,5 +81,5 @@ func NewServer(store db.Store, config config.Config) *Server {
 
 // Run's the api server
 func (server *Server) Run(addr string) error {
-	return server.Router.Run(addr)
+	return server.Router.RunTLS(addr, "cert.pem", "key.pem")
 }
