@@ -33,11 +33,15 @@ func NewServer(store db.Store, config config.Config) *Server {
 		v.RegisterValidation("accesslvl", middlewares.ValidAccessLvl)
 	}
 
-	ginDefault := gin.Default()
-	router := ginDefault.Group("/api/v1")
+	router := gin.Default()
 
 	router.Use(middlewares.EnsureJSONContentType())
 	router.Use(middlewares.RateGuard(server.Limiter))
+
+	// CORS preflight requests should
+	// be handled before API requests authentication because credentials are never
+	// sent on a preflight request, so it would always fail otherwise
+	router.Use(middlewares.CorsFilter())
 
 	// at least one of the following two middleware should succeed
 	// for user to be authenticated
@@ -47,22 +51,23 @@ func NewServer(store db.Store, config config.Config) *Server {
 	// log all requests
 	router.Use(middlewares.AuditLogger(store))
 
-	router.POST("/users", server.registerUser)
+	router.POST(makeUrl("/users"), server.registerUser)
 
 	// require that all following requests require authentication
 	router.Use(middlewares.RequireAuthentication())
 
-	router.POST("/users/login", server.loginUser)
-	router.POST("/spaces", server.createSpace)
+	router.POST(makeUrl("/users/login"), server.loginUser)
+	router.DELETE(makeUrl("/users/logout"), server.logoutUser)
+	router.POST(makeUrl("/spaces"), server.createSpace)
 
-	router.GET("/test", func(c *gin.Context) {
+	router.GET(makeUrl("/test"), func(c *gin.Context) {
 		c.JSON(http.StatusOK, gin.H{
 			"message": "Hello World",
 		})
 	})
 
 	router.POST(
-		"/spaces/:spaceID/messages",
+		makeUrl("/spaces/:spaceID/messages"),
 		middlewares.RequireAccessLvl(middlewares.WriteAccess, store),
 		func(c *gin.Context) {
 			c.JSON(http.StatusNotImplemented, "not implemented")
@@ -70,16 +75,20 @@ func NewServer(store db.Store, config config.Config) *Server {
 	)
 
 	router.POST(
-		"/spaces/:spaceID/members",
+		makeUrl("/spaces/:spaceID/members"),
 		middlewares.RequireAccessLvl(middlewares.AdminAccess, store),
 		server.addMemberToSpace,
 	)
 
-	server.Router = ginDefault
+	server.Router = router
 	return server
 }
 
 // Run's the api server
 func (server *Server) Run(addr string) error {
 	return server.Router.RunTLS(addr, "cert.pem", "key.pem")
+}
+
+func makeUrl(path string) string {
+	return "/api/v1" + path
 }

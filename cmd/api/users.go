@@ -69,6 +69,23 @@ func (server *Server) loginUser(ctx *gin.Context) {
 	httpx.WriteResponse(ctx, http.StatusOK, map[string]string{"token": tokenId})
 }
 
+func (server *Server) logoutUser(ctx *gin.Context) {
+	// get token from header
+	tokenID := ctx.GetHeader("X-CSRF-Token")
+	if tokenID == "" {
+		httpx.WriteError(ctx, http.StatusBadRequest, fmt.Errorf("missing X-CSRF-token in header"))
+		return
+	}
+
+	err := server.tokenMaker.RevokeToken(ctx, tokenID)
+	if err != nil {
+		httpx.WriteError(ctx, http.StatusInternalServerError, err)
+		return
+	}
+
+	httpx.WriteResponse(ctx, http.StatusOK, nil)
+}
+
 func handleRegisterUserError(ctx *gin.Context, err error) {
 	var pgErr *pgconn.PgError
 	// if not a pg error return generic error

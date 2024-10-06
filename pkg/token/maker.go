@@ -7,4 +7,6 @@ type Maker interface {
 	CreateToken(ctx *gin.Context, payload *Payload) (string, error)
 	// VerifyToken checks if the token is valid
 	VerifyToken(ctx *gin.Context, tokenID string) (*Payload, error)
+	// RevokeToken deletes a specific token from the store
+	RevokeToken(ctx *gin.Context, tokenID string) error
 }

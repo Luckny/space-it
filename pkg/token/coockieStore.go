@@ -32,7 +32,7 @@ type CookieStore struct {
 // var Store = newCookieStore()
 var SessionName = "_HOST-session"
 
-func NewCookieStore() *CookieStore {
+func NewCookieStore() Maker {
 	config := config.Load("../../")
 	return &CookieStore{
 		Name:     "_HOST-session",
@@ -127,4 +127,37 @@ func (c *CookieStore) VerifyToken(ctx *gin.Context, tokenID string) (*Payload, e
 	}
 
 	return token, nil
+}
+
+func (c *CookieStore) RevokeToken(ctx *gin.Context, tokenID string) error {
+	session, err := c.store.Get(ctx.Request, c.Name)
+	if err != nil {
+		return err
+	}
+
+	if session.IsNew {
+		return nil
+	}
+
+	// get the session id
+	sessionId := session.Values["sessionId"].(uuid.UUID)
+
+	// compare the provided token with the computed token
+	provided, err := decodeBase64String(tokenID)
+	if err != nil {
+		return err
+	}
+
+	computed := sha256.Sum256([]byte(sessionId.String()))
+	// constant time comparison to help prevent timing attacks
+	if subtle.ConstantTimeCompare(provided, computed[:]) != 1 {
+		return nil
+	}
+
+	session.Options.MaxAge = -1
+	err = session.Save(ctx.Request, ctx.Writer)
+	if err != nil {
+		return err
+	}
+	return nil
 }
