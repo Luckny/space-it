@@ -47,6 +47,13 @@ type Space struct {
 	CreatedAt pgtype.Timestamp `json:"created_at"`
 }
 
+type Token struct {
+	TokenID    uuid.UUID          `json:"token_id"`
+	UserID     uuid.UUID          `json:"user_id"`
+	Expiry     pgtype.Timestamptz `json:"expiry"`
+	Attributes string             `json:"attributes"`
+}
+
 type User struct {
 	ID        uuid.UUID        `json:"id"`
 	Email     string           `json:"email"`

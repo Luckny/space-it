@@ -161,6 +161,21 @@ func (mr *MockStoreMockRecorder) CreateSpaceTx(arg0, arg1 any) *gomock.Call {
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateSpaceTx", reflect.TypeOf((*MockStore)(nil).CreateSpaceTx), arg0, arg1)
 }
 
+// CreateToken mocks base method.
+func (m *MockStore) CreateToken(arg0 context.Context, arg1 db.CreateTokenParams) (db.Token, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "CreateToken", arg0, arg1)
+	ret0, _ := ret[0].(db.Token)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// CreateToken indicates an expected call of CreateToken.
+func (mr *MockStoreMockRecorder) CreateToken(arg0, arg1 any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateToken", reflect.TypeOf((*MockStore)(nil).CreateToken), arg0, arg1)
+}
+
 // CreateUnauthenticatedRequestLog mocks base method.
 func (m *MockStore) CreateUnauthenticatedRequestLog(arg0 context.Context, arg1 db.CreateUnauthenticatedRequestLogParams) (db.RequestLog, error) {
 	m.ctrl.T.Helper()
@@ -203,6 +218,20 @@ func (m *MockStore) DeleteSpace(arg0 context.Context, arg1 uuid.UUID) error {
 func (mr *MockStoreMockRecorder) DeleteSpace(arg0, arg1 any) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DeleteSpace", reflect.TypeOf((*MockStore)(nil).DeleteSpace), arg0, arg1)
+}
+
+// DeleteToken mocks base method.
+func (m *MockStore) DeleteToken(arg0 context.Context, arg1 uuid.UUID) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "DeleteToken", arg0, arg1)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// DeleteToken indicates an expected call of DeleteToken.
+func (mr *MockStoreMockRecorder) DeleteToken(arg0, arg1 any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DeleteToken", reflect.TypeOf((*MockStore)(nil).DeleteToken), arg0, arg1)
 }
 
 // GetPermissionsByUserAndSpaceID mocks base method.
@@ -248,6 +277,21 @@ func (m *MockStore) GetSpaceByName(arg0 context.Context, arg1 string) (db.Space,
 func (mr *MockStoreMockRecorder) GetSpaceByName(arg0, arg1 any) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetSpaceByName", reflect.TypeOf((*MockStore)(nil).GetSpaceByName), arg0, arg1)
+}
+
+// GetToken mocks base method.
+func (m *MockStore) GetToken(arg0 context.Context, arg1 uuid.UUID) (db.Token, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GetToken", arg0, arg1)
+	ret0, _ := ret[0].(db.Token)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// GetToken indicates an expected call of GetToken.
+func (mr *MockStoreMockRecorder) GetToken(arg0, arg1 any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetToken", reflect.TypeOf((*MockStore)(nil).GetToken), arg0, arg1)
 }
 
 // GetUserByEmail mocks base method.

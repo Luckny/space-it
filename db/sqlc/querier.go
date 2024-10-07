@@ -18,12 +18,15 @@ type Querier interface {
 	CreateReadPermission(ctx context.Context, arg CreateReadPermissionParams) (Permission, error)
 	CreateResponseLog(ctx context.Context, arg CreateResponseLogParams) (ResponseLog, error)
 	CreateSpace(ctx context.Context, arg CreateSpaceParams) (Space, error)
+	CreateToken(ctx context.Context, arg CreateTokenParams) (Token, error)
 	CreateUnauthenticatedRequestLog(ctx context.Context, arg CreateUnauthenticatedRequestLogParams) (RequestLog, error)
 	CreateWritePermission(ctx context.Context, arg CreateWritePermissionParams) (Permission, error)
 	DeleteSpace(ctx context.Context, id uuid.UUID) error
+	DeleteToken(ctx context.Context, tokenID uuid.UUID) error
 	GetPermissionsByUserAndSpaceID(ctx context.Context, arg GetPermissionsByUserAndSpaceIDParams) (Permission, error)
 	GetSpaceByID(ctx context.Context, id uuid.UUID) (Space, error)
 	GetSpaceByName(ctx context.Context, name string) (Space, error)
+	GetToken(ctx context.Context, tokenID uuid.UUID) (Token, error)
 	GetUserByEmail(ctx context.Context, email string) (User, error)
 	ListSpaces(ctx context.Context, arg ListSpacesParams) ([]Space, error)
 	RegisterUser(ctx context.Context, arg RegisterUserParams) (User, error)
